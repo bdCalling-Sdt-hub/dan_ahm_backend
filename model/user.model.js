@@ -28,7 +28,11 @@ const userSchema = new mongoose.Schema(
       type: Date,
       // required: true
     },
-    nhsNumber: { type: String, required: true, unique: true },
+    nhsNumber: {
+      type: String,
+      required: false,
+      // unique: true,
+    },
     consultationHistory: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Consultation" },
     ],

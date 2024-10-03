@@ -24,6 +24,18 @@ const authSchema = new mongoose.Schema(
       default: "patient",
     },
 
+    doctorApplicationStatus: {
+      type: String,
+      enum: ["notApplied", "pending", "approved", "cancelled"],
+      default: "notApplied",
+    },
+
+    isDoctor: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
     isVerified: {
       type: Boolean,
       required: false,

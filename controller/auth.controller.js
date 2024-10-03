@@ -16,11 +16,11 @@ const signup = async (req, res) => {
     //     .send(failure("Failed to add the user", validation[0].msg));
     // }
 
-    // if (req.body.role === "admin") {
-    //   return res
-    //     .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
-    //     .send(failure(`Admin cannot be signed up`));
-    // }
+    if (req.body.role === "admin") {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(failure(`Admin cannot be signed up`));
+    }
 
     if (!req.body.email || !req.body.password) {
       return res
@@ -85,6 +85,193 @@ const signup = async (req, res) => {
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .send(`INTERNAL SERVER ERROR`);
+  }
+};
+const signupAsDoctor = async (req, res) => {
+  try {
+    // const validation = validationResult(req).array();
+    // console.log(validation);
+    // if (validation.length > 0) {
+    //   return res
+    //     .status(HTTP_STATUS.OK)
+    //     .send(failure("Failed to add the user", validation[0].msg));
+    // }
+
+    // if (req.body.role === "admin") {
+    //   return res
+    //     .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+    //     .send(failure(`Admin cannot be signed up`));
+    // }
+
+    if (!req.body.email || !req.body.password) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("please provide mail and password"));
+    }
+
+    const emailCheck = await Auth.findOne({ email: req.body.email });
+
+    if (emailCheck && emailCheck.doctorApplicationStatus === "pending") {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(
+          failure(
+            `${req.body.email} has already applied for the doctor's position`
+          )
+        );
+    }
+
+    if (
+      emailCheck &&
+      (emailCheck.isDoctor === true ||
+        emailCheck.doctorApplicationStatus === "approved")
+    ) {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(failure(`${req.body.email} is already a doctor`));
+    }
+
+    if (emailCheck) {
+      emailCheck.doctorApplicationStatus = "pending";
+      await emailCheck.save();
+
+      return res
+        .status(HTTP_STATUS.OK)
+        .send(
+          success("You have successfully applied for the doctor's position")
+        );
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    const user = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.phone,
+      gender: req.body.gender,
+      nhsNumber: Date.now(),
+    });
+
+    // const newUser = await User.create(req.body)
+    // creates new user and stores
+    const newUser = await Auth.create({
+      email: req.body.email,
+      password: hashedPassword,
+      doctorApplicationStatus: "pending",
+      user: user._id,
+    });
+
+    // payload, secret, JWT expiration
+    // const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {
+    //     expiresIn: process.env.JWT_EXPIRES_IN
+    // })
+
+    newUser.password = undefined;
+    newUser.__v = undefined;
+    newUser.role = undefined;
+    newUser.isVerified = undefined;
+    newUser.wrongAttempts = undefined;
+    newUser.isLocked = undefined;
+    newUser.lockedTill = undefined;
+    user.__v = undefined;
+
+    if (newUser) {
+      res
+        .status(HTTP_STATUS.OK)
+        .send(
+          success(
+            "Account created successfully & applied for doctor's position",
+            { user }
+          )
+        );
+    } else {
+      res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Account couldnt be created"));
+    }
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(`INTERNAL SERVER ERROR`);
+  }
+};
+
+const approveDoctor = async (req, res) => {
+  try {
+    const { doctorId } = req.body; // doctorId of the user who applied
+
+    if (!doctorId) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Please provide doctorId"));
+    }
+
+    const doctor = await Auth.findById(doctorId);
+
+    if (!doctor || doctor.doctorApplicationStatus !== "pending") {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(
+          failure("User not found or not applied for the doctor's position")
+        );
+    }
+
+    doctor.doctorApplicationStatus = "approved";
+    doctor.isDoctor = true;
+    doctor.role = "doctor";
+    await doctor.save();
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Doctor application approved", doctor));
+  } catch (err) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to approve doctor"));
+  }
+};
+
+const cancelDoctor = async (req, res) => {
+  try {
+    const { doctorId } = req.body; // doctorId of the user who applied
+
+    if (!doctorId) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Please provide doctorId"));
+    }
+
+    const doctor = await Auth.findById(doctorId);
+
+    if (!doctor) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("User not found"));
+    }
+
+    if (
+      doctor.doctorApplicationStatus === "cancelled" ||
+      doctor.doctorApplicationStatus === "notApplied"
+    ) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("User did not apply for doctor's position yet"));
+    }
+
+    doctor.doctorApplicationStatus = "cancelled";
+    doctor.isDoctor = false;
+    doctor.role = "patient";
+
+    await doctor.save();
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Doctor application cancelled", doctor));
+  } catch (err) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to cancel doctor"));
   }
 };
 
@@ -165,6 +352,9 @@ const logout = async (req, res) => {
 
 module.exports = {
   signup,
+  signupAsDoctor,
+  approveDoctor,
+  cancelDoctor,
   login,
   logout,
 };
