@@ -7,6 +7,7 @@ const {
   signupAsDoctor,
   approveDoctor,
   cancelDoctor,
+  loginAsDoctor,
 } = require("../controller/auth.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const { isAuthorizedUser } = require("../middleware/authValidationJWT");
@@ -47,6 +48,9 @@ routes.post(
 
 // for logging in
 routes.post("/auth/login", authValidator.login, login);
+
+// for logging in
+routes.post("/auth/login-as-doctor", authValidator.login, loginAsDoctor);
 
 // for logging in
 routes.post("/auth/logout", logout);
