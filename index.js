@@ -12,7 +12,7 @@ const databaseConnection = require("./config/database");
 // const User = require('./model/Product')
 const TransactionRouter = require("./routes/TransactionRoutes");
 const UserRouter = require("./routes/UserRoutes");
-const AuthRouter = require("./routes/AuthRoutes");
+const AuthRouter = require("./routes/auth.route");
 
 const app = express();
 
