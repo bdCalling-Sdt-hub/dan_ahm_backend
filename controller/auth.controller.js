@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const { success, failure } = require("../utilities/common");
 const Auth = require("../model/auth.model");
 const User = require("../model/user.model");
+const Notification = require("../model/notification.model");
 const HTTP_STATUS = require("../constants/statusCodes");
 
 const signup = async (req, res) => {
@@ -109,7 +110,20 @@ const signupAsDoctor = async (req, res) => {
         .send(failure("please provide mail and password"));
     }
 
-    const emailCheck = await Auth.findOne({ email: req.body.email });
+    const emailCheck = await Auth.findOne({ email: req.body.email }).populate(
+      "user"
+    );
+
+    const admin = await Auth.findOne({ email: "admin@email.com" }).populate(
+      "user"
+    );
+
+    console.log("emailCheck", emailCheck);
+    console.log("admin", admin);
+
+    if (!admin) {
+      return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Admin not found"));
+    }
 
     if (emailCheck && emailCheck.doctorApplicationStatus === "pending") {
       return res
@@ -134,6 +148,28 @@ const signupAsDoctor = async (req, res) => {
     if (emailCheck) {
       emailCheck.doctorApplicationStatus = "pending";
       await emailCheck.save();
+
+      // Create a new notification for the admin and doctor
+      const newNotification = await Notification.create({
+        applicant: emailCheck._id,
+        admin: admin._id,
+        status: "pending",
+        message: `${emailCheck.email} has applied for the doctor role.`,
+      });
+
+      if (!newNotification) {
+        return res
+          .status(HTTP_STATUS.BAD_REQUEST)
+          .send(failure("Could not send notification"));
+      }
+
+      emailCheck.user.notifications.push(newNotification._id);
+      await emailCheck.save();
+      await emailCheck.user.save();
+
+      admin.user.notifications.push(newNotification._id);
+      await admin.save();
+      await admin.user.save();
 
       return res
         .status(HTTP_STATUS.OK)
@@ -160,6 +196,26 @@ const signupAsDoctor = async (req, res) => {
       doctorApplicationStatus: "pending",
       user: user._id,
     });
+
+    // Create a new notification for the admin and doctor
+    const newNotification = await Notification.create({
+      applicant: newUser._id,
+      admin: admin._id,
+      status: "pending",
+      message: `User ${user.name} has applied for the doctor role.`,
+    });
+
+    if (!newNotification) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Could not send notification"));
+    }
+
+    emailCheck.user.notifications.push(newNotification._id);
+    await user.save();
+
+    admin.user.notifications.push(newNotification._id);
+    await admin.save();
 
     // payload, secret, JWT expiration
     // const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {
@@ -207,20 +263,49 @@ const approveDoctor = async (req, res) => {
         .send(failure("Please provide doctorId"));
     }
 
-    const doctor = await Auth.findById(doctorId);
+    const doctor = await Auth.findById(doctorId).populate("user");
+    const admin = await Auth.findOne({ email: "admin@email.com" }).populate(
+      "user"
+    );
 
-    if (!doctor || doctor.doctorApplicationStatus !== "pending") {
+    if (!doctor) {
       return res
-        .status(HTTP_STATUS.BAD_REQUEST)
-        .send(
-          failure("User not found or not applied for the doctor's position")
-        );
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("User does not exist"));
     }
+
+    // if (doctor.doctorApplicationStatus !== "pending") {
+    //   return res
+    //     .status(HTTP_STATUS.BAD_REQUEST)
+    //     .send(failure("User did not apply for the doctor's position"));
+    // }
 
     doctor.doctorApplicationStatus = "approved";
     doctor.isDoctor = true;
     doctor.role = "doctor";
     await doctor.save();
+
+    // Create a new notification for the admin doctor
+    const newNotification = await Notification.create({
+      applicant: doctor._id,
+      admin: admin._id,
+      status: "approved",
+      message: `your application has been approved.`,
+    });
+
+    if (!newNotification) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Could not send notification"));
+    }
+
+    doctor.user.notifications.push(newNotification._id);
+    await doctor.save();
+    await doctor.user.save();
+
+    admin.user.notifications.push(newNotification._id);
+    await admin.save();
+    await admin.user.save();
 
     return res
       .status(HTTP_STATUS.OK)
@@ -234,7 +319,7 @@ const approveDoctor = async (req, res) => {
 
 const cancelDoctor = async (req, res) => {
   try {
-    const { doctorId } = req.body; // doctorId of the user who applied
+    const { doctorId } = req.body;
 
     if (!doctorId) {
       return res
@@ -242,7 +327,10 @@ const cancelDoctor = async (req, res) => {
         .send(failure("Please provide doctorId"));
     }
 
-    const doctor = await Auth.findById(doctorId);
+    const doctor = await Auth.findById(doctorId).populate("user");
+    const admin = await Auth.findOne({ email: "admin@email.com" }).populate(
+      "user"
+    );
 
     if (!doctor) {
       return res
@@ -264,6 +352,28 @@ const cancelDoctor = async (req, res) => {
     doctor.role = "patient";
 
     await doctor.save();
+
+    // Create a new notification for the admin doctor
+    const newNotification = await Notification.create({
+      applicant: doctor._id,
+      admin: admin._id,
+      status: "cancelled",
+      message: `your application has been cancelled.`,
+    });
+
+    if (!newNotification) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Could not send notification"));
+    }
+
+    doctor.user.notifications.push(newNotification._id);
+    await doctor.save();
+    await doctor.user.save();
+
+    admin.user.notifications.push(newNotification._id);
+    await admin.save();
+    await admin.user.save();
 
     return res
       .status(HTTP_STATUS.OK)
