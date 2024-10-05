@@ -11,7 +11,7 @@ const path = require("path");
 const databaseConnection = require("./config/database");
 // const User = require('./model/Product')
 const TransactionRouter = require("./routes/TransactionRoutes");
-const UserRouter = require("./routes/UserRoutes");
+const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
 
 const app = express();

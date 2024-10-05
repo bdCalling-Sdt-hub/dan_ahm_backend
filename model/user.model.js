@@ -8,8 +8,24 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "please provide email"],
       unique: true,
+    },
+    password: {
+      type: String,
+      required: [true, "Please provide a password"],
+      minlength: 5,
+      select: false,
+    },
+    role: {
+      type: String,
+      enum: ["doctor", "patient", "admin"],
+      default: "patient",
+    },
+    doctorApplicationStatus: {
+      type: String,
+      enum: ["notApplied", "pending", "approved", "cancelled"],
+      default: "notApplied",
     },
     phone: {
       type: String,
@@ -42,6 +58,29 @@ const userSchema = new mongoose.Schema(
     notifications: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
     ],
+    isDoctor: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    isVerified: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    isActive: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
+
+    isLocked: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   { timestamps: true }
 );

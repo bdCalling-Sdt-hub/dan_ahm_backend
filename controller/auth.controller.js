@@ -2,7 +2,6 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { success, failure } = require("../utilities/common");
-const Auth = require("../model/auth.model");
 const User = require("../model/user.model");
 const Notification = require("../model/notification.model");
 const HTTP_STATUS = require("../constants/statusCodes");
@@ -29,7 +28,7 @@ const signup = async (req, res) => {
         .send(failure("please provide mail and password"));
     }
 
-    const emailCheck = await Auth.findOne({ email: req.body.email });
+    const emailCheck = await User.findOne({ email: req.body.email });
     if (emailCheck) {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -38,24 +37,14 @@ const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = await User.create({
+    const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
+      password: hashedPassword,
       nhsNumber: req.body.nhsNumber,
       phone: req.body.phone,
       gender: req.body.gender,
       balance: req.body.balance ? req.body.balance : 0,
-    });
-
-    // const newUser = await User.create(req.body)
-    // creates new user and stores
-    const newUser = await Auth.create({
-      email: req.body.email,
-      password: hashedPassword,
-      // role: req.body.role,
-      // lockedTill: Date.now(),
-      // lockedTill: null,
-      user: user._id,
     });
 
     // payload, secret, JWT expiration
@@ -63,24 +52,14 @@ const signup = async (req, res) => {
     //     expiresIn: process.env.JWT_EXPIRES_IN
     // })
 
-    newUser.password = undefined;
-    newUser.__v = undefined;
-    newUser.role = undefined;
-    newUser.verified = undefined;
-    newUser.wrongAttempts = undefined;
-    newUser.isLocked = undefined;
-    newUser.lockedTill = undefined;
-    user.__v = undefined;
-
     if (newUser) {
-      res
+      return res
         .status(HTTP_STATUS.OK)
-        .send(success("Account created successfully ", { user }));
-    } else {
-      res
-        .status(HTTP_STATUS.BAD_REQUEST)
-        .send(failure("Account couldnt be created"));
+        .send(success("Account created successfully ", { newUser }));
     }
+    return res
+      .status(HTTP_STATUS.BAD_REQUEST)
+      .send(failure("Account couldnt be created"));
   } catch (err) {
     console.log(err);
     return res
@@ -88,6 +67,7 @@ const signup = async (req, res) => {
       .send(`INTERNAL SERVER ERROR`);
   }
 };
+
 const signupAsDoctor = async (req, res) => {
   try {
     // const validation = validationResult(req).array();
@@ -110,16 +90,9 @@ const signupAsDoctor = async (req, res) => {
         .send(failure("please provide mail and password"));
     }
 
-    const emailCheck = await Auth.findOne({ email: req.body.email }).populate(
-      "user"
-    );
+    const emailCheck = await User.findOne({ email: req.body.email });
 
-    const admin = await Auth.findOne({ email: "admin@email.com" }).populate(
-      "user"
-    );
-
-    console.log("emailCheck", emailCheck);
-    console.log("admin", admin);
+    const admin = await User.findOne({ email: "admin@email.com" });
 
     if (!admin) {
       return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Admin not found"));
@@ -163,13 +136,11 @@ const signupAsDoctor = async (req, res) => {
           .send(failure("Could not send notification"));
       }
 
-      emailCheck.user.notifications.push(newNotification._id);
+      emailCheck.notifications.push(newNotification._id);
       await emailCheck.save();
-      await emailCheck.user.save();
 
-      admin.user.notifications.push(newNotification._id);
+      admin.notifications.push(newNotification._id);
       await admin.save();
-      await admin.user.save();
 
       return res
         .status(HTTP_STATUS.OK)
@@ -180,29 +151,28 @@ const signupAsDoctor = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const user = await User.create({
+    const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
+      password: hashedPassword,
+      doctorApplicationStatus: "pending",
       phone: req.body.phone,
       gender: req.body.gender,
       nhsNumber: Date.now(),
     });
 
-    // const newUser = await User.create(req.body)
-    // creates new user and stores
-    const newUser = await Auth.create({
-      email: req.body.email,
-      password: hashedPassword,
-      doctorApplicationStatus: "pending",
-      user: user._id,
-    });
+    if (!newUser) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Account couldnt be created"));
+    }
 
     // Create a new notification for the admin and doctor
     const newNotification = await Notification.create({
       applicant: newUser._id,
       admin: admin._id,
       status: "pending",
-      message: `User ${user.name} has applied for the doctor role.`,
+      message: `${newUser.email} has applied for the doctor role.`,
     });
 
     if (!newNotification) {
@@ -211,10 +181,10 @@ const signupAsDoctor = async (req, res) => {
         .send(failure("Could not send notification"));
     }
 
-    emailCheck.user.notifications.push(newNotification._id);
-    await user.save();
+    newUser.notifications.push(newNotification._id);
+    await newUser.save();
 
-    admin.user.notifications.push(newNotification._id);
+    admin.notifications.push(newNotification._id);
     await admin.save();
 
     // payload, secret, JWT expiration
@@ -222,29 +192,14 @@ const signupAsDoctor = async (req, res) => {
     //     expiresIn: process.env.JWT_EXPIRES_IN
     // })
 
-    newUser.password = undefined;
-    newUser.__v = undefined;
-    newUser.role = undefined;
-    newUser.isVerified = undefined;
-    newUser.wrongAttempts = undefined;
-    newUser.isLocked = undefined;
-    newUser.lockedTill = undefined;
-    user.__v = undefined;
-
-    if (newUser) {
-      res
-        .status(HTTP_STATUS.OK)
-        .send(
-          success(
-            "Account created successfully & applied for doctor's position",
-            { user }
-          )
-        );
-    } else {
-      res
-        .status(HTTP_STATUS.BAD_REQUEST)
-        .send(failure("Account couldnt be created"));
-    }
+    res
+      .status(HTTP_STATUS.OK)
+      .send(
+        success(
+          "Account created successfully & applied for doctor's position",
+          { user: newUser }
+        )
+      );
   } catch (err) {
     console.log(err);
     return res
@@ -263,10 +218,8 @@ const approveDoctor = async (req, res) => {
         .send(failure("Please provide doctorId"));
     }
 
-    const doctor = await Auth.findById(doctorId).populate("user");
-    const admin = await Auth.findOne({ email: "admin@email.com" }).populate(
-      "user"
-    );
+    const doctor = await User.findById(doctorId);
+    const admin = await User.findOne({ email: "admin@email.com" });
 
     if (!doctor) {
       return res
@@ -299,13 +252,11 @@ const approveDoctor = async (req, res) => {
         .send(failure("Could not send notification"));
     }
 
-    doctor.user.notifications.push(newNotification._id);
+    doctor.notifications.push(newNotification._id);
     await doctor.save();
-    await doctor.user.save();
 
-    admin.user.notifications.push(newNotification._id);
+    admin.notifications.push(newNotification._id);
     await admin.save();
-    await admin.user.save();
 
     return res
       .status(HTTP_STATUS.OK)
@@ -327,10 +278,8 @@ const cancelDoctor = async (req, res) => {
         .send(failure("Please provide doctorId"));
     }
 
-    const doctor = await Auth.findById(doctorId).populate("user");
-    const admin = await Auth.findOne({ email: "admin@email.com" }).populate(
-      "user"
-    );
+    const doctor = await User.findById(doctorId);
+    const admin = await User.findOne({ email: "admin@email.com" });
 
     if (!doctor) {
       return res
@@ -367,13 +316,11 @@ const cancelDoctor = async (req, res) => {
         .send(failure("Could not send notification"));
     }
 
-    doctor.user.notifications.push(newNotification._id);
+    doctor.notifications.push(newNotification._id);
     await doctor.save();
-    await doctor.user.save();
 
-    admin.user.notifications.push(newNotification._id);
+    admin.notifications.push(newNotification._id);
     await admin.save();
-    await admin.user.save();
 
     return res
       .status(HTTP_STATUS.OK)
@@ -397,9 +344,7 @@ const login = async (req, res) => {
     }
 
     // fetching the fields
-    const user = await Auth.findOne({ email })
-      .select("+password")
-      .populate("user");
+    const user = await User.findOne({ email }).select("+password");
 
     // object conversion
     const userObj = user.toObject();
@@ -411,9 +356,6 @@ const login = async (req, res) => {
         .send(failure("wrong email or password"));
     }
 
-    // const userDetails = await Auth.findOne({email})
-    // .populate("user")
-
     // token
     const token = jwt.sign(user.toObject(), process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
@@ -422,9 +364,7 @@ const login = async (req, res) => {
     // deleting unnecessary fields
     user.password = undefined;
     delete userObj.password;
-    delete userObj.wrongAttempts;
     delete userObj.isLocked;
-    delete userObj.lockedTill;
     delete userObj.createdAt;
     delete userObj.updatedAt;
     delete userObj.__v;
@@ -452,9 +392,7 @@ const loginAsDoctor = async (req, res) => {
     }
 
     // fetching the fields
-    const user = await Auth.findOne({ email })
-      .select("+password")
-      .populate("user");
+    const user = await User.findOne({ email }).select("+password");
 
     // object conversion
     const userObj = user.toObject();
@@ -481,9 +419,6 @@ const loginAsDoctor = async (req, res) => {
           failure("Your request has been cancelled. Please try again later")
         );
     }
-
-    // const userDetails = await Auth.findOne({email})
-    // .populate("user")
 
     // token
     const token = jwt.sign(user.toObject(), process.env.JWT_SECRET, {
