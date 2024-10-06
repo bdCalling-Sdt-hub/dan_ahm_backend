@@ -84,6 +84,14 @@ const serviceSchema = new Schema(
         required: true,
       },
     ],
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isDisabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
