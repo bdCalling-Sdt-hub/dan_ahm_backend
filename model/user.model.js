@@ -55,6 +55,7 @@ const userSchema = new mongoose.Schema(
     upcomingHistory: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Consultation" },
     ],
+    services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
     notifications: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
     ],
