@@ -6,6 +6,7 @@ const {
   getAllUsers,
   getOneUserById,
   getNotificationsByUserId,
+  getAllNotifications,
   updateUserById,
 } = require("../controller/user.controller");
 
@@ -18,6 +19,12 @@ const { userValidator } = require("../middleware/validation");
 // gets all user data
 // routes.get("/", isAuthorized, UserController.getAll);
 routes.get("/", getAllUsers);
+
+// Route to get notifications by userId
+routes.get("/notifications-by-user", getNotificationsByUserId);
+
+// Route to get notifications by userId
+routes.get("/all-notifications", getAllNotifications);
 
 // // get one user data
 routes.get("/:id", getOneUserById);
@@ -42,12 +49,6 @@ routes.patch(
 //   userValidator.update,
 //   UserController.updateUserByAdmin
 // );
-
-// Route to get notifications by userId
-// routes.get("/notifications-by-user", getNotificationsByUserId);
-routes.get("/notifications-by-user", (req, res) => {
-  res.send({ message: "Notifications fetched successfully" });
-});
 
 // for signing up
 // routes.post('/signup', AuthController.signup)

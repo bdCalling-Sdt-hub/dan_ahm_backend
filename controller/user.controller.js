@@ -2,6 +2,7 @@ const { success, failure } = require("../utilities/common");
 const { validationResult } = require("express-validator");
 const HTTP_STATUS = require("../constants/statusCodes");
 const UserModel = require("../model/user.model");
+const Notification = require("../model/notification.model");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -52,15 +53,20 @@ const updateUserById = async (req, res) => {
     //     .send(failure("Failed to update data", validation[0].msg));
     // }
 
-    const authId = req.params.id;
-    const userAuth = await UserModel.find({ _id: authId }).populate("user");
-    const userId = userAuth[0].user._id;
-    console.log("user id", userId);
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .json({ message: "please provide id parameter" });
+    }
+
+    // const userAuth = await UserModel.find({ _id: req.params.id });
+    // const userId = userAuth[0].user._id;
+    // console.log("user id", userId);
 
     const updatedUserData = req.body;
 
     const updatedUser = await UserModel.findByIdAndUpdate(
-      userId,
+      req.params.id,
       updatedUserData,
       // Returns the updated document
       { new: true }
@@ -206,9 +212,34 @@ const getNotificationsByUserId = async (req, res) => {
   }
 };
 
+// Controller to get notifications by userId
+const getAllNotifications = async (req, res) => {
+  try {
+    // Fetch the user to check if they exist
+    const notifications = await Notification.find();
+
+    if (!notifications) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("notification does not exist"));
+    }
+
+    res.status(HTTP_STATUS.OK).send({
+      message: "All Notifications fetched successfully",
+      notifications: notifications,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getOneUserById,
   getNotificationsByUserId,
+  getAllNotifications,
   updateUserById,
 };
