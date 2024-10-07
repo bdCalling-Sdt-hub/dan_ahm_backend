@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
     consultationHistory: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Consultation" },
     ],
-    upcomingHistory: [
+    consultationUpcoming: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Consultation" },
     ],
     services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
