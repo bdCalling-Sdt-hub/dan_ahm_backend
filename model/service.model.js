@@ -92,6 +92,11 @@ const serviceSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "cancelled"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );

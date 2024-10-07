@@ -9,6 +9,8 @@ const {
   deleteServiceById,
   disableServiceById,
   enableServiceById,
+  approveServiceById,
+  cancelServiceById,
 } = require("../controller/service.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const { isAuthorizedUser } = require("../middleware/authValidationJWT");
@@ -69,6 +71,20 @@ routes.patch(
   // userValidator.create,
   // authValidator.create,
   enableServiceById
+);
+
+routes.patch(
+  "/approve-service-by-id/:id",
+  // userValidator.create,
+  // authValidator.create,
+  approveServiceById
+);
+
+routes.patch(
+  "/cancel-service-by-id/:id",
+  // userValidator.create,
+  // authValidator.create,
+  cancelServiceById
 );
 
 module.exports = routes;

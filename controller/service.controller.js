@@ -2,6 +2,7 @@ const { success, failure } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
 const Service = require("../model/service.model");
 const User = require("../model/user.model");
+const Nootification = require("../model/notification.model");
 
 const addService = async (req, res) => {
   try {
@@ -22,6 +23,12 @@ const addService = async (req, res) => {
     }
 
     const doctor = await User.findById(doctorId);
+    const admin = await User.findOne({ email: "admin@email.com" });
+
+    if (!admin) {
+      return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Admin not found"));
+    }
+
     if (!doctor) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
@@ -36,19 +43,35 @@ const addService = async (req, res) => {
       consultationType,
       doctor: doctorId,
       user,
+      status: "pending",
     });
-
-    doctor.services.push(newService._id);
-
-    await doctor.save();
 
     if (!newService) {
       return res
         .status(HTTP_STATUS.BAD_REQUEST)
-        .send(failure("Service not added"));
+        .send(failure("Service could not be added"));
     }
-
     await newService.save();
+
+    doctor.services.push(newService._id);
+    await doctor.save();
+
+    const notification = new Nootification({
+      message: `${doctor.email} has applied for a ${newService.division} service.`,
+      applicant: doctor._id,
+      admin: admin._id,
+      type: "serviceApplication",
+      serviceId: newService._id, // service id
+    });
+
+    if (!notification) {
+      return res.status(HTTP_STATUS.BAD_REQUEST).send(failure("Error"));
+    }
+    await notification.save();
+
+    admin.notifications.push(notification._id);
+    await admin.save();
+
     return res
       .status(HTTP_STATUS.CREATED)
       .send(success("Service added successfully", newService));
@@ -232,6 +255,60 @@ const enableServiceById = async (req, res) => {
   }
 };
 
+const approveServiceById = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide service id"));
+    }
+    const service = await Service.findByIdAndUpdate(
+      req.params.id,
+      { status: "approved" },
+      { new: true }
+    );
+    if (!service) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Service not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Successfully approved service", service));
+  } catch (error) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Error approving service", error.message));
+  }
+};
+
+const cancelServiceById = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide service id"));
+    }
+    const service = await Service.findByIdAndUpdate(
+      req.params.id,
+      { status: "cancelled" },
+      { new: true }
+    );
+    if (!service) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Service not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Successfully approved service", service));
+  } catch (error) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Error approving service", error.message));
+  }
+};
+
 module.exports = {
   addService,
   getAllServices,
@@ -241,4 +318,6 @@ module.exports = {
   deleteServiceById,
   disableServiceById,
   enableServiceById,
+  approveServiceById,
+  cancelServiceById,
 };
