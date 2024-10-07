@@ -12,6 +12,11 @@ const notificationSchema = new mongoose.Schema(
       ref: "User",
       required: false, // The admin managing the application
     },
+    serviceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service",
+      required: false,
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "cancelled"],
@@ -28,6 +33,11 @@ const notificationSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    type: {
+      type: String,
+      enum: ["serviceApplication", "doctorApplication", "others"],
+      default: "others",
     },
   },
   { timestamps: true }
