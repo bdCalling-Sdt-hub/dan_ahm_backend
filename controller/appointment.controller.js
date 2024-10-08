@@ -1,6 +1,7 @@
 const Appointment = require("../model/appointment.model");
 const Service = require("../model/service.model");
 const User = require("../model/user.model");
+const Notification = require("../model/notification.model");
 const { success, failure } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
 
@@ -25,10 +26,12 @@ const bookService = async (req, res) => {
         .send(failure("Service not found or unavailable"));
     }
 
-    // console.log("dateTime", new Date(dateTime));
-    // console.log("dateTime", service.dateTimes);
-    // console.log("dateTime", service.dateTimes[1]);
-    // console.log("dateTime", service.dateTimes.includes(new Date(dateTime)));
+    const doctor = await User.findById(service.doctor);
+    if (!doctor) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Doctor not found"));
+    }
 
     // Convert the input dateTime to a Date object
     const selectedDateTime = new Date(dateTime).getTime();
@@ -43,13 +46,6 @@ const bookService = async (req, res) => {
         .status(HTTP_STATUS.CONFLICT)
         .send(failure("Selected time is not available for this service"));
     }
-
-    // // Check if the requested dateTime is available
-    // if (!service.dateTimes.includes(new Date(dateTime))) {
-    //   return res
-    //     .status(HTTP_STATUS.CONFLICT)
-    //     .send(failure("Selected time is not available for this service"));
-    // }
 
     // Check if there's already an appointment for this service and time
     const existingAppointment = await Appointment.findOne({
@@ -73,9 +69,31 @@ const bookService = async (req, res) => {
       type,
     });
 
+    if (appointment) {
+      // Remove the selected dateTime from the service's available times
+      service.dateTimes = service.dateTimes.filter(
+        (time) => new Date(time).getTime() !== selectedDateTime
+      );
+      await service.save();
+    }
+
     await appointment.save();
 
+    // Create a notification for the doctor
+    const notification = new Notification({
+      applicant: patientId,
+      admin: service.doctor,
+      serviceId,
+      type: "serviceApplication",
+      message: `A new appointment has been created for service ${service.division}`,
+    });
+    await notification.save();
+
+    doctor.notifications.push(notification._id);
+    await doctor.save();
+
     patient.consultationUpcoming.push(appointment._id);
+    patient.notifications.push(notification._id);
     await patient.save();
 
     return res
@@ -88,7 +106,6 @@ const bookService = async (req, res) => {
       .send(failure("Failed to book the service"));
   }
 };
-
 // Cancel a service
 const cancelService = async (req, res) => {
   try {
@@ -99,7 +116,7 @@ const cancelService = async (req, res) => {
       _id: appointmentId,
       patientId: patientId,
       status: "upcoming",
-    });
+    }).populate("serviceId");
 
     if (!appointment) {
       return res
@@ -110,6 +127,29 @@ const cancelService = async (req, res) => {
     // Cancel the appointment
     appointment.status = "cancelled";
     await appointment.save();
+
+    const patient = await User.findById(patientId);
+
+    // Remove the appointment from the patient's upcoming appointments and put it into the consultation history
+    patient.consultationHistory.push(appointment._id);
+    patient.consultationUpcoming = patient.consultationUpcoming.filter(
+      (id) => id.toString() !== appointment._id.toString()
+    );
+    await patient.save();
+
+    // Create a notification for the patient
+    const notification = new Notification({
+      applicant: patientId,
+      admin: appointment.doctorId,
+      serviceId: appointment.serviceId,
+      type: "serviceApplication",
+      message: `Your appointment has been cancelled for service ${appointment.serviceId.division}`,
+    });
+
+    if (notification) {
+      patient.notifications.push(notification._id);
+      await patient.save();
+    }
 
     return res
       .status(HTTP_STATUS.OK)
