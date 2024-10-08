@@ -1,8 +1,9 @@
 const express = require("express");
 const routes = express();
 const {
-  bookService,
-  cancelService,
+  bookAppointment,
+  cancelAppointment,
+  completeAppointment,
   getAllAppointments,
   getAppointmentById,
   getAppointmentByPatientId,
@@ -17,7 +18,7 @@ routes.post(
   "/book-service",
   // userValidator.create,
   // authValidator.create,
-  bookService
+  bookAppointment
 );
 
 routes.get(
@@ -52,7 +53,14 @@ routes.patch(
   "/cancel-appointment-by-id/:id",
   // userValidator.create,
   // authValidator.create,
-  cancelService
+  cancelAppointment
+);
+
+routes.patch(
+  "/complete-appointment-by-id/:id",
+  // userValidator.create,
+  // authValidator.create,
+  completeAppointment
 );
 
 module.exports = routes;

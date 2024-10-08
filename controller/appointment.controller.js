@@ -6,7 +6,7 @@ const { success, failure } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
 
 // Book a service
-const bookService = async (req, res) => {
+const bookAppointment = async (req, res) => {
   try {
     const { serviceId, dateTime, dayOfWeek, patientId, type } = req.body;
 
@@ -107,7 +107,7 @@ const bookService = async (req, res) => {
   }
 };
 // Cancel a service
-const cancelService = async (req, res) => {
+const cancelAppointment = async (req, res) => {
   try {
     const { appointmentId, patientId } = req.body;
 
@@ -159,6 +159,37 @@ const cancelService = async (req, res) => {
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .send(failure("Failed to cancel the appointment"));
+  }
+};
+
+const completeAppointment = async (req, res) => {
+  try {
+    const { appointmentId, patientId } = req.body;
+
+    // Find the appointment
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+      patientId: patientId,
+    });
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+
+    // Complete the appointment
+    appointment.status = "completed";
+    await appointment.save();
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Appointment successfully completed", { appointment }));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to complete the appointment"));
   }
 };
 
@@ -253,8 +284,9 @@ const getAppointmentByDoctorId = async (req, res) => {
 };
 
 module.exports = {
-  bookService,
-  cancelService,
+  bookAppointment,
+  cancelAppointment,
+  completeAppointment,
   getAllAppointments,
   getAppointmentById,
   getAppointmentByPatientId,
