@@ -15,6 +15,7 @@ const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
 const ServiceRouter = require("./routes/service.route");
 const AppointmentRouter = require("./routes/appointment.route");
+const ChatRouter = require("./routes/chat.route");
 
 const app = express();
 
@@ -56,10 +57,11 @@ app.use(status());
 app.use("/transactions", TransactionRouter);
 app.use("/users", UserRouter);
 app.use("/users", AuthRouter);
-
 app.use("/service", ServiceRouter);
-
 app.use("/appointment", AppointmentRouter);
+app.use("/chats", ChatRouter);
+
+// app.use()
 
 // Route to handle all other invalid requests
 app.use((req, res) => {
