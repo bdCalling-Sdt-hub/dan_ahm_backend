@@ -59,4 +59,5 @@ const fetchMessages = async (req, res) => {
 
 module.exports = {
   sendMessage,
+  fetchMessages,
 };
