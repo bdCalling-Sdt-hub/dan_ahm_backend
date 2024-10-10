@@ -33,6 +33,12 @@ const appointmentSchema = new Schema(
     },
     type: { type: String, enum: ["video", "phone"], required: true },
     zoomLink: { type: String },
+    notes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Note",
+      },
+    ],
   },
   { timestamps: true }
 );
