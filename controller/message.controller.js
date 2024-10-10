@@ -40,7 +40,7 @@ const sendMessage = async (req, res) => {
   }
 };
 
-const fetchMessages = async (req, res) => {
+const fetchAllMessages = async (req, res) => {
   try {
     const { chatId } = req.body;
     const messages = await Message.find({ chat: chatId })
@@ -59,5 +59,5 @@ const fetchMessages = async (req, res) => {
 
 module.exports = {
   sendMessage,
-  fetchMessages,
+  fetchAllMessages,
 };
