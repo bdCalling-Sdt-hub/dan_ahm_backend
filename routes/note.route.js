@@ -38,25 +38,4 @@ routes.delete(
   deleteNote
 );
 
-// routes.get(
-//   "/get-appointment-by-doctorId/:id",
-//   // userValidator.create,
-//   // authValidator.create,
-//   getAppointmentByDoctorId
-// );
-
-// routes.patch(
-//   "/cancel-appointment-by-id/:id",
-//   // userValidator.create,
-//   // authValidator.create,
-//   cancelAppointment
-// );
-
-// routes.patch(
-//   "/complete-appointment-by-id/:id",
-//   // userValidator.create,
-//   // authValidator.create,
-//   completeAppointment
-// );
-
 module.exports = routes;
