@@ -3,7 +3,7 @@ const routes = express();
 const { accessChat, fetchChats } = require("../controller/chat.controller");
 const {
   sendMessage,
-  fetchMessages,
+  fetchAllMessages,
 } = require("../controller/message.controller");
 
 routes.post("/access-chat/:id", accessChat);
@@ -12,6 +12,6 @@ routes.get("/get-users-all-chat/:id", fetchChats);
 
 routes.post("/send-message/:id", sendMessage);
 
-routes.get("/fetch-messages", fetchMessages);
+routes.get("/fetch-messages", fetchAllMessages);
 
 module.exports = routes;
