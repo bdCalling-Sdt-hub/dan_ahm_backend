@@ -16,6 +16,7 @@ const AuthRouter = require("./routes/auth.route");
 const ServiceRouter = require("./routes/service.route");
 const AppointmentRouter = require("./routes/appointment.route");
 const ChatRouter = require("./routes/chat.route");
+const NoteRouter = require("./routes/note.route");
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use("/users", UserRouter);
 app.use("/users", AuthRouter);
 app.use("/service", ServiceRouter);
 app.use("/appointment", AppointmentRouter);
+app.use("/note", NoteRouter);
 app.use("/chats", ChatRouter);
 
 // app.use()
