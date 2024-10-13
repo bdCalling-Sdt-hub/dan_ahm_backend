@@ -625,6 +625,52 @@ const resetPassword = async (req, res) => {
       .send(failure("Internal server error"));
   }
 };
+
+const changePassword = async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword, confirmPassword } = req.body;
+    if (!email || !oldPassword || !newPassword || !confirmPassword) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(
+          failure(
+            "Please provide email, old password, new password and confirm password"
+          )
+        );
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("New password and confirm password do not match"));
+    }
+
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("User with this email does not exist"));
+    }
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isPasswordMatch) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Old password is incorrect"));
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Password changed successfully"));
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Internal server error"));
+  }
+};
 module.exports = {
   signup,
   signupAsDoctor,
@@ -636,4 +682,5 @@ module.exports = {
   verifyEmail,
   forgotPassword,
   resetPassword,
+  changePassword,
 };
