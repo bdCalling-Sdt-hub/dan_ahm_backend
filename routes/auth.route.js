@@ -9,6 +9,8 @@ const {
   approveDoctor,
   cancelDoctor,
   loginAsDoctor,
+  forgotPassword,
+  resetPassword,
 } = require("../controller/auth.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const { isAuthorizedUser } = require("../middleware/authValidationJWT");
@@ -36,6 +38,20 @@ routes.post(
   // userValidator.create,
   // authValidator.create,
   verifyEmail
+);
+
+routes.post(
+  "/auth/forgot-password",
+  // userValidator.create,
+  // authValidator.create,
+  forgotPassword
+);
+
+routes.post(
+  "/auth/reset-password",
+  // userValidator.create,
+  // authValidator.create,
+  resetPassword
 );
 
 // for approving doctor

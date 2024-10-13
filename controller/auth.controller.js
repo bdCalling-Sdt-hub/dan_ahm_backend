@@ -541,6 +541,90 @@ const logout = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Please provide email"));
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("User with this email does not exist"));
+    }
+    const emailVerifyCode =
+      Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+
+    user.emailVerifyCode = emailVerifyCode;
+    user.emailVerified = false;
+    await user.save();
+
+    const emailData = {
+      email,
+      subject: "Password Reset Email",
+      html: `
+        <h1>Hello, ${user.name || "User"}</h1>
+        <p>Your Email verified Code is <h3>${emailVerifyCode}</h3> to reset your password</p>
+        <small>This Code is valid for 3 minutes</small>
+      `,
+    };
+    await emailWithNodemailerGmail(emailData);
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Verification code sent successfully"));
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Internal server error"));
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
+    if (!email || !newPassword || !confirmPassword) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Please provide email, password and confirm password"));
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("User with this email does not exist"));
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Password and confirm password do not match"));
+    }
+
+    if (!user.emailVerified) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Please verify your email first"));
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.emailVerifyCode = null;
+
+    await user.save();
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Password reset successfully"));
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Internal server error"));
+  }
+};
 module.exports = {
   signup,
   signupAsDoctor,
@@ -550,4 +634,6 @@ module.exports = {
   loginAsDoctor,
   logout,
   verifyEmail,
+  forgotPassword,
+  resetPassword,
 };
