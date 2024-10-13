@@ -43,7 +43,7 @@ const signup = async (req, res) => {
         html: `
                       <h1>Hello, ${emailCheck?.name || "User"}</h1>
                       <p>Your email verification code is <h3>${emailVerifyCode}</h3> to verify your email</p>
-                      <small>This Code is valid for 3 minutes</small>
+                      
                     `,
       };
       emailWithNodemailerGmail(emailData);
@@ -86,7 +86,7 @@ const signup = async (req, res) => {
       html: `
                   <h1>Hello, ${newUser?.name || "User"}</h1>
                   <p>Your email verification code is <h3>${emailVerifyCode}</h3> to verify your email</p>
-                  <small>This Code is valid for 3 minutes</small>
+                  
                 `,
     };
 
