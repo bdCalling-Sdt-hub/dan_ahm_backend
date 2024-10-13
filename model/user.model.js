@@ -65,10 +65,15 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
-    isVerified: {
+    emailVerified: {
       type: Boolean,
       required: false,
       default: false,
+    },
+
+    emailVerifyCode: {
+      type: String,
+      required: false,
     },
 
     isActive: {
