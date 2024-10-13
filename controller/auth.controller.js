@@ -5,6 +5,7 @@ const { success, failure } = require("../utilities/common");
 const User = require("../model/user.model");
 const Notification = require("../model/notification.model");
 const HTTP_STATUS = require("../constants/statusCodes");
+const { emailWithNodemailerGmail } = require("../config/email.config");
 
 const signup = async (req, res) => {
   try {
@@ -29,6 +30,29 @@ const signup = async (req, res) => {
     }
 
     const emailCheck = await User.findOne({ email: req.body.email });
+
+    if (emailCheck && !emailCheck.emailVerified) {
+      const emailVerifyCode =
+        Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+      emailCheck.emailVerifyCode = emailVerifyCode;
+      await emailCheck.save();
+
+      const emailData = {
+        email: emailCheck.email,
+        subject: "Account Activation Email",
+        html: `
+                      <h1>Hello, ${emailCheck?.name || "User"}</h1>
+                      <p>Your email verification code is <h3>${emailVerifyCode}</h3> to verify your email</p>
+                      <small>This Code is valid for 3 minutes</small>
+                    `,
+      };
+      emailWithNodemailerGmail(emailData);
+
+      return res
+        .status(HTTP_STATUS.OK)
+        .send(success("Please verify your email"));
+    }
+
     if (emailCheck) {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -37,11 +61,15 @@ const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
+    const emailVerifyCode =
+      Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+
     const newUser = await User.create({
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
-      nhsNumber: req.body.nhsNumber,
+      emailVerifyCode,
+      nhsNumber: req.body.nhsNumber || Date.now(),
       phone: req.body.phone,
       gender: req.body.gender,
       balance: req.body.balance ? req.body.balance : 0,
@@ -52,6 +80,17 @@ const signup = async (req, res) => {
     //     expiresIn: process.env.JWT_EXPIRES_IN
     // })
 
+    const emailData = {
+      email: req.body.email,
+      subject: "Account Activation Email",
+      html: `
+                  <h1>Hello, ${newUser?.name || "User"}</h1>
+                  <p>Your email verification code is <h3>${emailVerifyCode}</h3> to verify your email</p>
+                  <small>This Code is valid for 3 minutes</small>
+                `,
+    };
+
+    emailWithNodemailerGmail(emailData);
     if (newUser) {
       return res
         .status(HTTP_STATUS.OK)
@@ -200,6 +239,42 @@ const signupAsDoctor = async (req, res) => {
           { user: newUser }
         )
       );
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(`INTERNAL SERVER ERROR`);
+  }
+};
+
+const verifyEmail = async (req, res) => {
+  try {
+    const { email, emailVerifyCode } = req.body;
+    if (!email || !emailVerifyCode) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Please provide email and verification code"));
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("User does not exist"));
+    }
+
+    if (user.emailVerifyCode !== emailVerifyCode) {
+      return res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .send(failure("Invalid verification code"));
+    }
+
+    user.emailVerified = true;
+    user.emailVerifyCode = null;
+    await user.save();
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Email verified successfully"));
   } catch (err) {
     console.log(err);
     return res
@@ -474,4 +549,5 @@ module.exports = {
   login,
   loginAsDoctor,
   logout,
+  verifyEmail,
 };

@@ -2,6 +2,7 @@ const express = require("express");
 const routes = express();
 const {
   signup,
+  verifyEmail,
   login,
   logout,
   signupAsDoctor,
@@ -28,6 +29,13 @@ routes.post(
   // userValidator.create,
   // authValidator.create,
   signupAsDoctor
+);
+
+routes.post(
+  "/auth/verify-email",
+  // userValidator.create,
+  // authValidator.create,
+  verifyEmail
 );
 
 // for approving doctor
