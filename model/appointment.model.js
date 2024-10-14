@@ -39,6 +39,12 @@ const appointmentSchema = new Schema(
         ref: "Note",
       },
     ],
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
+    paymentId: { type: String },
   },
   { timestamps: true }
 );
