@@ -9,8 +9,6 @@ const fs = require("fs");
 const path = require("path");
 
 const databaseConnection = require("./config/database");
-// const User = require('./model/Product')
-const TransactionRouter = require("./routes/TransactionRoutes");
 const UserRouter = require("./routes/user.route");
 const AuthRouter = require("./routes/auth.route");
 const ServiceRouter = require("./routes/service.route");
@@ -56,7 +54,6 @@ app.use(status());
 // Use morgan with a combined format and stream it to the access log file
 // app.use(morgan("combined", { stream: accessLogStream }));
 
-app.use("/transactions", TransactionRouter);
 app.use("/users", UserRouter);
 app.use("/users", AuthRouter);
 app.use("/service", ServiceRouter);
