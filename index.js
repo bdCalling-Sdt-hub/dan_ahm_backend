@@ -16,6 +16,7 @@ const AppointmentRouter = require("./routes/appointment.route");
 const ChatRouter = require("./routes/chat.route");
 const NoteRouter = require("./routes/note.route");
 const PaymentRouter = require("./routes/payment.route");
+const ReviewRouter = require("./routes/review.route");
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use("/appointment", AppointmentRouter);
 app.use("/payment", PaymentRouter);
 app.use("/note", NoteRouter);
 app.use("/chats", ChatRouter);
+app.use("/review", ReviewRouter);
 
 // app.use()
 
