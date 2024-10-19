@@ -17,6 +17,7 @@ const ChatRouter = require("./routes/chat.route");
 const NoteRouter = require("./routes/note.route");
 const PaymentRouter = require("./routes/payment.route");
 const ReviewRouter = require("./routes/review.route");
+const termsOfServiceRouter = require("./routes/termsOfService.route");
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/payment", PaymentRouter);
 app.use("/note", NoteRouter);
 app.use("/chats", ChatRouter);
 app.use("/review", ReviewRouter);
+app.use("/terms-of-service", termsOfServiceRouter);
 
 // app.use()
 
