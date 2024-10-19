@@ -56,37 +56,58 @@ const updateUserById = async (req, res) => {
     if (!req.params.id) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
-        .json({ message: "please provide id parameter" });
+        .send({ message: "please provide id parameter" });
     }
 
-    // const userAuth = await UserModel.find({ _id: req.params.id });
-    // const userId = userAuth[0].user._id;
-    // console.log("user id", userId);
+    // const updatedUserData = req.body;
+    const { name, phone, image } = req.body;
 
-    const updatedUserData = req.body;
+    // const user = await UserModel.findById(req.user._id);
+    const user = await UserModel.findById(req.params.id);
 
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      req.params.id,
-      updatedUserData,
-      // Returns the updated document
-      { new: true }
-    );
-
-    if (!updatedUser) {
+    if (!user) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
-        .json({ message: "User not found" });
+        .send({ message: "User not found" });
     }
-    console.log(updatedUser);
-    updatedUser.__v = undefined;
+
+    if (req.files && req.files["image"]) {
+      let imageFileName = "";
+      if (req.files.image[0]) {
+        // Add public/uploads link to the image file
+
+        imageFileName = `public/uploads/images/${req.files.image[0].filename}`;
+        user.image = imageFileName;
+      }
+    }
+
+    user.name = name || user.name;
+    user.phone = phone || user.phone;
+
+    await user.save();
+
+    // const updatedUser = await UserModel.findByIdAndUpdate(
+    //   req.params.id,
+    //   updatedUserData,
+    //   // Returns the updated document
+    //   { new: true }
+    // );
+
+    // if (!updatedUser) {
+    //   return res
+    //     .status(HTTP_STATUS.NOT_FOUND)
+    //     .send({ message: "User not found" });
+    // }
+    // console.log(updatedUser);
+    // updatedUser.__v = undefined;
     return res
       .status(HTTP_STATUS.ACCEPTED)
-      .send(success("User data updated successfully", updatedUser));
+      .send(success("User data updated successfully", user));
   } catch (error) {
     console.log(error);
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-      .json({ message: "INTERNAL SERVER ERROR" });
+      .send({ message: "INTERNAL SERVER ERROR" });
   }
 };
 

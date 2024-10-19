@@ -2,6 +2,7 @@ const express = require("express");
 const routes = express();
 const UserController = require("../controller/user.controller");
 const AuthController = require("../controller/auth.controller");
+const fileUpload = require("../middleware/fileUpload");
 const {
   getAllUsers,
   getOneUserById,
@@ -37,6 +38,7 @@ routes.get("/:id", getOneUserById);
 // updates user data
 routes.patch(
   "/profile/:id",
+  fileUpload(),
   // isAuthorizedUser,
   // userValidator.update,
   updateUserById
