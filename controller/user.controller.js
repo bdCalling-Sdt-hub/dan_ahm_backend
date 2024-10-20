@@ -23,6 +23,38 @@ const getAllUsers = async (req, res) => {
   }
 };
 
+const getAllPatients = async (req, res) => {
+  try {
+    const user = await UserModel.find({ role: "patient" }).select("-__v");
+    if (user)
+      return res.status(HTTP_STATUS.OK).send(
+        success("Successfully received all patients", {
+          result: user,
+        })
+      );
+
+    return res.status(HTTP_STATUS.OK).send(failure("User not found"));
+  } catch (error) {
+    return res.status(400).send(`internal server error`);
+  }
+};
+
+const getAllDoctors = async (req, res) => {
+  try {
+    const user = await UserModel.find({ role: "doctor" }).select("-__v");
+    if (user.length) {
+      return res.status(HTTP_STATUS.OK).send(
+        success("Successfully received all doctors", {
+          result: user,
+        })
+      );
+    }
+    return res.status(HTTP_STATUS.OK).send(failure("doctors not found"));
+  } catch (error) {
+    return res.status(400).send(`internal server error`);
+  }
+};
+
 // gets only one product
 const getOneUserById = async (req, res) => {
   try {
@@ -173,6 +205,8 @@ const getAllNotifications = async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getAllPatients,
+  getAllDoctors,
   getOneUserById,
   getNotificationsByUserId,
   getAllNotifications,
