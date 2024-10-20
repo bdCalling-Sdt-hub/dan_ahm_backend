@@ -32,8 +32,9 @@ const signup = async (req, res) => {
     const emailCheck = await User.findOne({ email: req.body.email });
 
     if (emailCheck && !emailCheck.emailVerified) {
-      const emailVerifyCode =
-        Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+      // const emailVerifyCode =
+      //   Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000; // 4 digits
+      const emailVerifyCode = Math.floor(100000 + Math.random() * 900000); //6 digits
       emailCheck.emailVerifyCode = emailVerifyCode;
       await emailCheck.save();
 
