@@ -2,10 +2,11 @@ const Appointment = require("../model/appointment.model");
 const Service = require("../model/service.model");
 const User = require("../model/user.model");
 const Notification = require("../model/notification.model");
+const { emailWithNodemailerGmail } = require("../config/email.config");
 const { success, failure } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
 
-// Book a service
+// Book an appointment
 const bookAppointment = async (req, res) => {
   try {
     const { serviceId, dateTime, dayOfWeek, patientId, type } = req.body;
@@ -26,12 +27,12 @@ const bookAppointment = async (req, res) => {
         .send(failure("Service not found or unavailable"));
     }
 
-    const doctor = await User.findById(service.doctor);
-    if (!doctor) {
-      return res
-        .status(HTTP_STATUS.NOT_FOUND)
-        .send(failure("Doctor not found"));
-    }
+    // const doctor = await User.findById(service.doctor);
+    // if (!doctor) {
+    //   return res
+    //     .status(HTTP_STATUS.NOT_FOUND)
+    //     .send(failure("Doctor not found"));
+    // }
 
     // Convert the input dateTime to a Date object
     const selectedDateTime = new Date(dateTime).getTime();
@@ -63,34 +64,34 @@ const bookAppointment = async (req, res) => {
     const appointment = new Appointment({
       serviceId,
       patientId,
-      doctorId: service.doctor,
+      // doctorId: service.doctor || ,
       dateTime: new Date(dateTime),
       dayOfWeek,
       type,
     });
 
-    if (appointment) {
-      // Remove the selected dateTime from the service's available times
-      service.dateTimes = service.dateTimes.filter(
-        (time) => new Date(time).getTime() !== selectedDateTime
-      );
-      await service.save();
-    }
+    // if (appointment) {
+    //   // Remove the selected dateTime from the service's available times
+    //   service.dateTimes = service.dateTimes.filter(
+    //     (time) => new Date(time).getTime() !== selectedDateTime
+    //   );
+    //   await service.save();
+    // }
 
     await appointment.save();
 
     // Create a notification for the doctor
     const notification = new Notification({
       applicant: patientId,
-      admin: service.doctor,
+      // admin: service.doctor,
       serviceId,
       type: "serviceApplication",
       message: `A new appointment has been created for service ${service.division}`,
     });
     await notification.save();
 
-    doctor.notifications.push(notification._id);
-    await doctor.save();
+    // doctor.notifications.push(notification._id);
+    // await doctor.save();
 
     patient.consultationUpcoming.push(appointment._id);
     patient.notifications.push(notification._id);
@@ -106,7 +107,7 @@ const bookAppointment = async (req, res) => {
       .send(failure("Failed to book the service"));
   }
 };
-// Cancel a service
+// Cancel an appointment
 const cancelAppointment = async (req, res) => {
   try {
     const { appointmentId, patientId } = req.body;
@@ -159,6 +160,52 @@ const cancelAppointment = async (req, res) => {
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .send(failure("Failed to cancel the appointment"));
+  }
+};
+
+const addZoomLinkToAppointment = async (req, res) => {
+  try {
+    const { appointmentId, zoomLink, email } = req.body;
+
+    // Find the appointment
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+    });
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+
+    // Add the zoom link to the appointment
+    appointment.zoomLink = zoomLink;
+    appointment.patientEmail = email;
+    await appointment.save();
+    const dateTime = new Date(appointment.dateTime).toLocaleString();
+    const emailData = {
+      email: email,
+      subject: "Appointment zoom link",
+      html: ` <h2 style="color: #007BFF; text-align: center;">Zoom Link to your appointment</h2>
+              <h4>Hello there,</h4>
+              <p>The zoom link to your appointment is: <a href="${zoomLink}">${zoomLink}</a></p>
+              <p style="padding: 8px 0;"><strong >Appointment Date & Time: </strong> ${dateTime}</p>
+              <p style="color: #555;">Please be present 10 minutes prior to the scheduled appointment time.</p>
+              <p>Best regards,</p>
+              <p><strong>My Doctor Clinic</strong></p>
+            `,
+    };
+
+    emailWithNodemailerGmail(emailData);
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Zoom link added successfully", { appointment }));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to add zoom link"));
   }
 };
 
@@ -286,6 +333,7 @@ const getAppointmentByDoctorId = async (req, res) => {
 module.exports = {
   bookAppointment,
   cancelAppointment,
+  addZoomLinkToAppointment,
   completeAppointment,
   getAllAppointments,
   getAppointmentById,

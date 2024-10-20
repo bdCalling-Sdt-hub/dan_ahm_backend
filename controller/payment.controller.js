@@ -1,15 +1,22 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Appointment = require("../model/appointment.model");
+const Service = require("../model/service.model");
 const Transaction = require("../model/transaction.model");
 const HTTP_STATUS = require("../constants/statusCodes");
 const { success, failure } = require("../utilities/common");
+const { emailWithNodemailerGmail } = require("../config/email.config");
 
 const createPaymentIntent = async (req, res) => {
   try {
     const { appointmentId, paymentMethodId, amount } = req.body;
 
     // Fetch the appointment details
-    const appointment = await Appointment.findById(appointmentId);
+    const appointment = await Appointment.findById(appointmentId).populate(
+      "patientId",
+      "email name"
+    );
+
+    console.log(appointment.patientId.email);
     if (!appointment) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
@@ -45,6 +52,34 @@ const createPaymentIntent = async (req, res) => {
       status: "paid",
     });
     await transaction.save();
+
+    const service = await Service.findById(appointment.serviceId);
+    const selectedDateTime = new Date(appointment.dateTime).getTime();
+
+    if (service) {
+      // Remove the selected dateTime from the service's available times
+      service.dateTimes = service.dateTimes.filter(
+        (time) => new Date(time).getTime() !== selectedDateTime
+      );
+      await service.save();
+    }
+    const patientName = appointment.patientId.name || "patient";
+    const dateTime = new Date(appointment.dateTime).toLocaleString();
+    const emailData = {
+      email: appointment.patientId.email,
+      subject: "Payment processed successfully",
+      html: `
+              <h2 style="color: #007BFF; text-align: center;">Appointment Confirmed</h2>
+              <p>Dear <strong>${patientName}</strong>,</p>
+              <p>Your appointment has been successfully booked</p>
+              <p style="padding: 8px 0;"><strong >Appointment Date & Time: </strong> ${dateTime}</p>
+              <p>You will recieve a zoom link soon!</p>
+              <p>Best regards,</p>
+              <p><strong>My Doctor Clinic</strong></p>
+            `,
+    };
+
+    emailWithNodemailerGmail(emailData);
 
     // Respond to the client with the payment confirmation
     return res

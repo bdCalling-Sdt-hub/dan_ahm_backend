@@ -2,6 +2,7 @@ const express = require("express");
 const routes = express();
 const {
   bookAppointment,
+  addZoomLinkToAppointment,
   cancelAppointment,
   completeAppointment,
   getAllAppointments,
@@ -19,6 +20,13 @@ routes.post(
   // userValidator.create,
   // authValidator.create,
   bookAppointment
+);
+
+routes.post(
+  "/add-zoom-link",
+  // userValidator.create,
+  // authValidator.create,
+  addZoomLinkToAppointment
 );
 
 routes.get(

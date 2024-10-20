@@ -62,8 +62,9 @@ const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    const emailVerifyCode =
-      Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+    // const emailVerifyCode =
+    //   Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000; // 4digits
+    const emailVerifyCode = Math.floor(100000 + Math.random() * 900000); //6 digits
 
     const newUser = await User.create({
       name: req.body.name,
@@ -556,8 +557,10 @@ const forgotPassword = async (req, res) => {
         .status(HTTP_STATUS.BAD_REQUEST)
         .send(failure("User with this email does not exist"));
     }
-    const emailVerifyCode =
-      Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+    // const emailVerifyCode =
+    //   Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000; // 4 digits
+
+    const emailVerifyCode = Math.floor(100000 + Math.random() * 900000); //6 digits
 
     user.emailVerifyCode = emailVerifyCode;
     user.emailVerified = false;

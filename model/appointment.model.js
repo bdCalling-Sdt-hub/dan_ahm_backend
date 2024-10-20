@@ -16,7 +16,8 @@ const appointmentSchema = new Schema(
     doctorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
+      default: null,
     },
     dateTime: {
       type: Date,
@@ -33,6 +34,7 @@ const appointmentSchema = new Schema(
     },
     type: { type: String, enum: ["video", "phone"], required: true },
     zoomLink: { type: String },
+    patientEmail: { type: String },
     notes: [
       {
         type: mongoose.Schema.Types.ObjectId,
