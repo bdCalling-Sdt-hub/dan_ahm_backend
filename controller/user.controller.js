@@ -24,14 +24,33 @@ const getAllUsers = async (req, res) => {
 };
 
 const getAllPatients = async (req, res) => {
+  const { search, page, limit } = req.query;
+  const query = { role: "patient" };
+  if (search) {
+    query.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { email: { $regex: search, $options: "i" } },
+    ];
+  }
   try {
-    const user = await UserModel.find({ role: "patient" }).select("-__v");
-    if (user)
+    const users = await UserModel.find(query)
+      .select("-__v")
+      .skip((page - 1) * limit)
+      .limit(limit * 1);
+    const total = await UserModel.countDocuments(query);
+    if (users.length) {
       return res.status(HTTP_STATUS.OK).send(
         success("Successfully received all patients", {
-          result: user,
+          result: users,
+          pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+          },
         })
       );
+    }
 
     return res.status(HTTP_STATUS.OK).send(failure("User not found"));
   } catch (error) {

@@ -12,7 +12,6 @@ const {
 } = require("../controller/appointment.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const { isAuthorizedUser } = require("../middleware/authValidationJWT");
-const { get } = require("mongoose");
 // const { authValidator } = require("../middleware/authValidation");
 
 routes.post(
