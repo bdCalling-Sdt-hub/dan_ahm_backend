@@ -9,7 +9,15 @@ const HTTP_STATUS = require("../constants/statusCodes");
 // Book an appointment
 const bookAppointment = async (req, res) => {
   try {
-    const { serviceId, dateTime, dayOfWeek, patientId, type } = req.body;
+    const { serviceId, dateTime, dayOfWeek, type } = req.body;
+
+    if (!req.user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("User not logged in"));
+    }
+
+    const patientId = req.user._id;
 
     const patient = await User.findById(patientId);
 

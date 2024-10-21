@@ -12,11 +12,10 @@ const createPaymentIntent = async (req, res) => {
 
     // Fetch the appointment details
     const appointment = await Appointment.findById(appointmentId).populate(
-      "patientId",
-      "email name"
+      "patientId"
     );
 
-    console.log(appointment.patientId.email);
+    console.log("appointment", appointment.patientId);
     if (!appointment) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)

@@ -2,10 +2,15 @@ const jsonWebToken = require("jsonwebtoken");
 const HTTP_STATUS = require("../constants/statusCodes");
 const { failure } = require("../utilities/common");
 
-const isAuthorized = (req, res, next) => {
+const isAuthorizedAdmin = (req, res, next) => {
   try {
     const { authorization } = req.headers;
     console.log(authorization);
+    if (!authorization) {
+      return res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .send(failure("Unauthorized access, admin not logged in"));
+    }
     const token = authorization.split(" ")[1];
     console.log("token", token);
     const validate = jsonWebToken.verify(token, process.env.JWT_SECRET);
@@ -87,4 +92,4 @@ const isAuthorizedUser = (req, res, next) => {
   }
 };
 
-module.exports = { isAuthorized, isAuthorizedUser };
+module.exports = { isAuthorizedAdmin, isAuthorizedUser };

@@ -5,9 +5,13 @@ const {
   getPaymentIntent,
   getAllPaymentIntents,
 } = require("../controller/payment.controller");
+const {
+  isAuthorizedUser,
+  isAuthorizedAdmin,
+} = require("../middleware/authValidationJWT");
 
-routes.post("/create-payment-intent", createPaymentIntent);
+routes.post("/create-payment-intent", isAuthorizedUser, createPaymentIntent);
 routes.post("/get-payment-intent", getPaymentIntent);
-routes.get("/get-all-payment-intents", getAllPaymentIntents);
+routes.get("/get-all-payment-intents", isAuthorizedAdmin, getAllPaymentIntents);
 
 module.exports = routes;
