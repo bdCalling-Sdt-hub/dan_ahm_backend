@@ -24,7 +24,14 @@ const getAllUsers = async (req, res) => {
 };
 
 const getAllPatients = async (req, res) => {
-  const { search, page, limit } = req.query;
+  let { search, page, limit } = req.query;
+  if (page < 1 || limit < 0) {
+    return res
+      .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+      .send(failure("Page and limit values must be at least 1"));
+  }
+  page = parseInt(page) || 1;
+  limit = parseInt(limit) || 10;
   const query = { role: "patient" };
   if (search) {
     query.$or = [
