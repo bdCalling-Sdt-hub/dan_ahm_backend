@@ -20,7 +20,7 @@ const isAuthorizedAdmin = (req, res, next) => {
     } else {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
-        .send(failure("Something went wrong"));
+        .send(failure("Admin access required"));
     }
   } catch (error) {
     console.log(error);

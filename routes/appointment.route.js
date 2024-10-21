@@ -11,13 +11,17 @@ const {
   getAppointmentByDoctorId,
 } = require("../controller/appointment.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
-const { isAuthorizedUser } = require("../middleware/authValidationJWT");
+const {
+  isAuthorizedUser,
+  isAuthorizedAdmin,
+} = require("../middleware/authValidationJWT");
 // const { authValidator } = require("../middleware/authValidation");
 
 routes.post(
   "/book-service",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedUser,
   bookAppointment
 );
 
@@ -25,6 +29,7 @@ routes.post(
   "/add-zoom-link",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   addZoomLinkToAppointment
 );
 
@@ -32,6 +37,7 @@ routes.get(
   "/get-all-appointments",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   getAllAppointments
 );
 
@@ -60,6 +66,7 @@ routes.patch(
   "/cancel-appointment-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   cancelAppointment
 );
 
@@ -67,6 +74,7 @@ routes.patch(
   "/complete-appointment-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   completeAppointment
 );
 

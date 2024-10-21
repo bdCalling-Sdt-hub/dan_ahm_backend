@@ -13,7 +13,10 @@ const {
   cancelServiceById,
 } = require("../controller/service.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
-const { isAuthorizedUser } = require("../middleware/authValidationJWT");
+const {
+  isAuthorizedUser,
+  isAuthorizedAdmin,
+} = require("../middleware/authValidationJWT");
 const { get } = require("mongoose");
 // const { authValidator } = require("../middleware/authValidation");
 
@@ -21,6 +24,7 @@ routes.post(
   "/add-service",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   addService
 );
 
@@ -63,6 +67,7 @@ routes.patch(
   "/disable-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   disableServiceById
 );
 
@@ -70,6 +75,7 @@ routes.patch(
   "/enable-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   enableServiceById
 );
 
@@ -77,6 +83,7 @@ routes.patch(
   "/approve-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   approveServiceById
 );
 
@@ -84,6 +91,7 @@ routes.patch(
   "/cancel-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedUser,
   cancelServiceById
 );
 
