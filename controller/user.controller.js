@@ -100,6 +100,27 @@ const getOneUserById = async (req, res) => {
   }
 };
 
+const profile = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("User not logged in"));
+    }
+    const user = await UserModel.findById(req.user._id).select("-password");
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("User was not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Successfully got profile", user));
+  } catch (error) {
+    return res.status(HTTP_STATUS.BAD_REQUEST).send(`internal server error`);
+  }
+};
+
 const updateUserById = async (req, res) => {
   try {
     // const validation = validationResult(req).array();
@@ -127,6 +148,9 @@ const updateUserById = async (req, res) => {
         .status(HTTP_STATUS.NOT_FOUND)
         .send({ message: "User not found" });
     }
+
+    console.log("files", req.files);
+    console.log("files", req.files["image"]);
 
     if (req.files && req.files["image"]) {
       let imageFileName = "";
@@ -160,6 +184,42 @@ const updateUserById = async (req, res) => {
     return res
       .status(HTTP_STATUS.ACCEPTED)
       .send(success("User data updated successfully", user));
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send({ message: "INTERNAL SERVER ERROR" });
+  }
+};
+
+const updateProfileByUser = async (req, res) => {
+  try {
+    const { name, phone, image } = req.body;
+    const user = await UserModel.findById(req.user._id);
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send({ message: "User not found" });
+    }
+
+    console.log("files", req.files);
+    console.log("files", req.files["image"]);
+
+    if (req.files && req.files["image"]) {
+      let imageFileName = "";
+      if (req.files.image[0]) {
+        // Add public/uploads link to the image file
+
+        imageFileName = `public/uploads/images/${req.files.image[0].filename}`;
+        user.image = imageFileName;
+      }
+    }
+    user.name = name || user.name;
+    user.phone = phone || user.phone;
+    await user.save();
+    return res
+      .status(HTTP_STATUS.ACCEPTED)
+      .send(success("Profile updated successfully", user));
   } catch (error) {
     console.log(error);
     return res
@@ -236,4 +296,6 @@ module.exports = {
   getNotificationsByUserId,
   getAllNotifications,
   updateUserById,
+  profile,
+  updateProfileByUser,
 };

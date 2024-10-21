@@ -11,6 +11,8 @@ const {
   getNotificationsByUserId,
   getAllNotifications,
   updateUserById,
+  profile,
+  updateProfileByUser,
 } = require("../controller/user.controller");
 
 const {
@@ -34,15 +36,24 @@ routes.get("/notifications-by-user", getNotificationsByUserId);
 routes.get("/all-notifications", getAllNotifications);
 
 // // get one user data
-routes.get("/:id", getOneUserById);
+routes.get("/get-one-user/:id", getOneUserById);
 
 // updates user data
 routes.patch(
-  "/profile/:id",
+  "/get-one-user/:id",
   fileUpload(),
   // isAuthorizedUser,
   // userValidator.update,
   updateUserById
+);
+
+routes.get("/profile", isAuthorizedUser, profile);
+
+routes.patch(
+  "/update-profile-by-user",
+  isAuthorizedUser,
+  fileUpload(),
+  updateProfileByUser
 );
 
 // // updates user data
