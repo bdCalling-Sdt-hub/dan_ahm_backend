@@ -81,7 +81,6 @@ const getAllDoctors = async (req, res) => {
   }
 };
 
-// gets only one product
 const getOneUserById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -205,7 +204,7 @@ const getNotificationsByUserId = async (req, res) => {
   }
 };
 
-// Controller to get notifications by userId
+// Controller to get notifications
 const getAllNotifications = async (req, res) => {
   try {
     // Fetch the user to check if they exist
