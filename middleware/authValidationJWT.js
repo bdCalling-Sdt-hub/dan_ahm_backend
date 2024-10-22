@@ -14,6 +14,14 @@ const isAuthorizedAdmin = (req, res, next) => {
     const token = authorization.split(" ")[1];
     console.log("token", token);
     const validate = jsonWebToken.verify(token, process.env.JWT_SECRET);
+
+    if (!validate) {
+      return res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .send(failure("Unauthorized access, token not validated"));
+    }
+
+    req.user = validate;
     console.log("validate", validate.role);
     if (validate.role == "admin") {
       next();
