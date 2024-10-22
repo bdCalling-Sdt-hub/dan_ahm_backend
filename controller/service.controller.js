@@ -6,44 +6,29 @@ const Nootification = require("../model/notification.model");
 
 const addService = async (req, res) => {
   try {
-    const {
-      division,
-      doctorType,
-      dateTimes,
-      daysOfWeek,
-      consultationType,
-      doctorId,
-      user,
-    } = req.body;
+    const { title, price, dateTimes, consultationType, duration } = req.body;
 
-    if (!doctorId) {
-      return res
-        .status(HTTP_STATUS.BAD_REQUEST)
-        .send(failure("Please provide doctorId"));
-    }
+    const daysOfWeek = dateTimes.map((dateTime) => {
+      const day = new Date(dateTime).toLocaleString(undefined, {
+        weekday: "long",
+      });
+      return day.toLowerCase();
+    });
 
-    const doctor = await User.findById(doctorId);
-    const admin = await User.findOne({ email: "admin@email.com" });
+    const admin = await User.findById(req.user._id);
 
     if (!admin) {
       return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Admin not found"));
     }
 
-    if (!doctor) {
-      return res
-        .status(HTTP_STATUS.NOT_FOUND)
-        .send(failure("Doctor does not exist"));
-    }
-
     const newService = new Service({
-      division,
-      doctorType,
+      title,
+      price,
       dateTimes,
       daysOfWeek,
       consultationType,
-      doctor: doctorId,
-      user,
-      status: "pending",
+      duration,
+      status: "approved",
     });
 
     if (!newService) {
@@ -53,14 +38,10 @@ const addService = async (req, res) => {
     }
     await newService.save();
 
-    doctor.services.push(newService._id);
-    await doctor.save();
-
     const notification = new Nootification({
-      message: `${doctor.email} has applied for a ${newService.division} service.`,
-      applicant: doctor._id,
+      message: `New service has been created: ${newService.title}.`,
       admin: admin._id,
-      type: "serviceApplication",
+      type: "service",
       serviceId: newService._id, // service id
     });
 
@@ -71,7 +52,6 @@ const addService = async (req, res) => {
 
     admin.notifications.push(notification._id);
     await admin.save();
-
     return res
       .status(HTTP_STATUS.CREATED)
       .send(success("Service added successfully", newService));

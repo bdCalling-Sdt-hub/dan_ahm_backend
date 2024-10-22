@@ -5,7 +5,7 @@ const notificationSchema = new mongoose.Schema(
     applicant: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true, // The user applying for the doctor role
+      required: false, // The user applying for the doctor role
     },
     admin: {
       type: mongoose.Schema.Types.ObjectId,
@@ -36,7 +36,7 @@ const notificationSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["serviceApplication", "doctorApplication", "others"],
+      enum: ["service", "appointment", "others"],
       default: "others",
     },
   },

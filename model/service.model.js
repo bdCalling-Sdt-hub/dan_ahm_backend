@@ -3,48 +3,13 @@ const Schema = mongoose.Schema;
 
 const serviceSchema = new Schema(
   {
-    division: {
+    title: {
       type: String,
       required: true,
-      //   enum: [
-      //     "General Doctor",
-      //     "Psychiatry",
-      //     "Dentist",
-      //     "Pediatrics",
-      //     "Hormone",
-      //     "Medicine",
-      //     "Gastrologic",
-      //     "Pulmonology",
-      //     "Sexual Health",
-      //     "Allergy",
-      //   ],
     },
-    doctorType: {
-      type: String,
+    price: {
+      type: Number,
       required: true,
-      //   enum: [
-      //     "General Doctor",
-      //     "Cardiologist",
-      //     "Dentist",
-      //     "Psychiatrist",
-      //     "Dermatologist",
-      //     "Pulmonologist",
-      //     "Endocrinologist",
-      //   ],
-    },
-    rating: {
-      type: Number,
-      min: 0,
-      max: 5,
-      default: 0,
-    },
-    totalRatings: {
-      type: Number,
-      default: 0,
-    },
-    averageRating: {
-      type: Number,
-      default: 0,
     },
     dateTimes: [
       {
@@ -55,7 +20,7 @@ const serviceSchema = new Schema(
     daysOfWeek: [
       {
         type: String,
-        required: true,
+        required: false,
         enum: [
           "monday",
           "tuesday",
@@ -72,16 +37,45 @@ const serviceSchema = new Schema(
       required: true,
       enum: ["video", "audio"],
     },
+    duration: {
+      type: Number,
+      required: true,
+    },
+    division: {
+      type: String,
+      required: false,
+      default: "general",
+    },
+    doctorType: {
+      type: String,
+      required: false,
+      default: "general",
+    },
+    rating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      default: 0,
+    },
+    totalRatings: {
+      type: Number,
+      default: 0,
+    },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
     },
     patients: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
+        required: false,
       },
     ],
     isDeleted: {
