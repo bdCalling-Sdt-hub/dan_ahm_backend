@@ -41,6 +41,12 @@ const appointmentSchema = new Schema(
         ref: "Note",
       },
     ],
+    prescription: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Prescription",
+      },
+    ],
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],
