@@ -269,7 +269,14 @@ const getAllAppointments = async (req, res) => {
 
 const getAppointmentById = async (req, res) => {
   try {
-    const appointment = await Appointment.findById(req.params.id);
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const appointment = await Appointment.findById(req.params.id).populate(
+      "notes prescription"
+    );
     if (!appointment) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
@@ -288,13 +295,18 @@ const getAppointmentById = async (req, res) => {
 
 const getAppointmentByPatientId = async (req, res) => {
   try {
-    if (!req.body.patientId) {
+    if (!req.user._id) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
-        .send(failure("Please provide patient id"));
+        .send(failure("please login first"));
     }
+    // if (!req.body.patientId) {
+    //   return res
+    //     .status(HTTP_STATUS.NOT_FOUND)
+    //     .send(failure("Please provide patient id"));
+    // }
     const appointments = await Appointment.find({
-      patientId: req.body.patientId,
+      patientId: req.user._id,
     });
     if (!appointments) {
       return res
