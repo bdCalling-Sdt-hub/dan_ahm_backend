@@ -26,7 +26,7 @@ routes.get(
 );
 
 routes.put(
-  "/edit-prescription/:noteId",
+  "/edit-prescription/:prescriptionId",
   // userValidator.create,
   // authValidator.create,
   isAuthorizedUser,
@@ -34,7 +34,7 @@ routes.put(
 );
 
 routes.delete(
-  "/delete-prescription/:noteId",
+  "/delete-prescription/:prescriptionId",
   // userValidator.create,
   // authValidator.create,
   isAuthorizedUser,
