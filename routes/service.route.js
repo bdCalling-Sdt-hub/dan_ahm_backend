@@ -53,6 +53,7 @@ routes.put(
   "/update-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   updateServiceById
 );
 
@@ -60,6 +61,7 @@ routes.delete(
   "/delete-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   deleteServiceById
 );
 
@@ -91,7 +93,6 @@ routes.patch(
   "/cancel-service-by-id/:id",
   // userValidator.create,
   // authValidator.create,
-  isAuthorizedUser,
   cancelServiceById
 );
 
