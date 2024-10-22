@@ -14,6 +14,7 @@ routes.post(
   "/add-note",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedUser,
   addNote
 );
 
@@ -28,6 +29,7 @@ routes.put(
   "/edit-note/:noteId",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedUser,
   editNoteByNoteId
 );
 
@@ -35,6 +37,7 @@ routes.delete(
   "/delete-note/:noteId",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedUser,
   deleteNote
 );
 

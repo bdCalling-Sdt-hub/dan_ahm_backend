@@ -12,8 +12,8 @@ const addNote = async (req, res) => {
         .status(HTTP_STATUS.BAD_REQUEST)
         .send(failure("appointmentId and content fields are required"));
     }
-    // const userId = req.user._id; // Assuming user is available in req.user after authentication
-    const { userId } = req.body; // Assuming user is available in req.user after authentication
+    const userId = req.user._id; // Assuming user is available in req.user after authentication
+
     if (!userId) {
       return res
         .status(HTTP_STATUS.BAD_REQUEST)
@@ -85,9 +85,7 @@ const editNoteByNoteId = async (req, res) => {
   try {
     const { noteId } = req.params;
     const { title, content } = req.body;
-    // const userId = req.user._id; // Assuming user is available in req.user after authentication
-
-    const userId = req.body.userId; // Assuming user is available in req.user after authentication
+    const userId = req.user._id; // Assuming user is available in req.user after authentication
 
     // Find the note
     const note = await Note.findById(noteId);
@@ -125,9 +123,7 @@ const editNoteByNoteId = async (req, res) => {
 const deleteNote = async (req, res) => {
   try {
     const { noteId } = req.params;
-    // const userId = req.user._id; // Assuming user is available in req.user after authentication
-
-    const userId = req.body.userId; // Assuming user is available in req.user after authentication
+    const userId = req.user._id; // Assuming user is available in req.user after authentication
 
     // Find the note
     const note = await Note.findById(noteId);
