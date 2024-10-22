@@ -9,7 +9,7 @@ const HTTP_STATUS = require("../constants/statusCodes");
 // Book an appointment
 const bookAppointment = async (req, res) => {
   try {
-    const { serviceId, dateTime, dayOfWeek, type } = req.body;
+    const { serviceId, dateTime, dayOfWeek, type, description } = req.body;
 
     if (!req.user) {
       return res
@@ -74,6 +74,7 @@ const bookAppointment = async (req, res) => {
       patientId,
       // doctorId: service.doctor || ,
       dateTime: new Date(dateTime),
+      description: description || "no description provided",
       dayOfWeek,
       type,
     });

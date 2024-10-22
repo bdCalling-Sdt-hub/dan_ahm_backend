@@ -47,6 +47,7 @@ const appointmentSchema = new Schema(
         ref: "Prescription",
       },
     ],
+    description: { type: String },
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],
