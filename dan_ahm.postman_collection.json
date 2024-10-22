@@ -1,0 +1,2954 @@
+{
+	"info": {
+		"_postman_id": "7e19c9a5-c37f-4a9b-9b32-b1763845fc4b",
+		"name": "dan_ahm",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39189485",
+		"_collection_link": "https://universal-star-726100.postman.co/workspace/My-Workspace~a2113657-d0e2-431a-895d-21c423d26908/collection/39189485-7e19c9a5-c37f-4a9b-9b32-b1763845fc4b?action=share&source=collection_link&creator=39189485"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signup as user/patient",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "nodenat960@paxnw.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "nodenat",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "nodenat",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/signup",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup as doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/signup-as-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"signup-as-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "bahobih598@chysir.com",
+									"type": "text"
+								},
+								{
+									"key": "emailVerifyCode",
+									"value": "808001",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/verify-email",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "abc@email.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/forgot-password?email=nodenat960@paxnw.com",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"forgot-password"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": "nodenat960@paxnw.com"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "nodenat960@paxnw.com",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "nodenat960",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "nodenat960",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/reset-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "nodenat960@paxnw.com",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "nodenat961",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "nodenat961",
+									"type": "text"
+								},
+								{
+									"key": "oldPassword",
+									"value": "nodenat960",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/change-password",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "approve doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/approve-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"approve-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "66fe4d1b0103f5d5f0816f65",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/cancel-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"cancel-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "admin@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login as doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/login-as-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"login-as-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzAxMjdlZDdhZDNlZDJjNTNlNDg5YjEiLCJlbWFpbCI6ImRvY3RvckBlbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRtSXZLYUovYkVrUEVGby5rLk90U2t1QnpNWUtaMUk4ck5HWHJMYWcyaVZHV2J4ZzUyNEtsNiIsInJvbGUiOiJwYXRpZW50IiwiZG9jdG9yQXBwbGljYXRpb25TdGF0dXMiOiJjYW5jZWxsZWQiLCJiYWxhbmNlIjowLCJuaHNOdW1iZXIiOiIxNzI4MTI5MDA1Njk2IiwiY29uc3VsdGF0aW9uSGlzdG9yeSI6W10sInVwY29taW5nSGlzdG9yeSI6W10sIm5vdGlmaWNhdGlvbnMiOlsiNjcwMTI3ZWQ3YWQzZWQyYzUzZTQ4OWIzIiwiNjcwMTI4MzU3YWQzZWQyYzUzZTQ4OWJjIiwiNjcwMTJiYjM3YWQzZWQyYzUzZTQ4OWMzIl0sImlzRG9jdG9yIjpmYWxzZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NTA6MDUuNzAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMDVUMTI6MDY6MTEuMzYyWiIsIl9fdiI6MywiaWF0IjoxNzI4MTMwMDMwLCJleHAiOjE3MjgyMTY0MzB9.NBF_ykGxONDB9ubZsCNwcHtS4iq7B1upSU5tQP0HF6U",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"abir@email.com\",\r\n    \"password\": \"123456\",\r\n    \"nhsNumber\": \"211\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "get all users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all patients",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/patients?search=a&page=1&limit=10",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"patients"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "a"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all patients Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/doctors",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"doctors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one user by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/get-one-user/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"get-one-user",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "arafat",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "0199999999",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ABIR/Pictures/Screenshots/Screenshot (10).png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/get-one-user/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"get-one-user",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get own profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE0OTVjNTYyN2M5ZDdhMjFiMDQwYjAiLCJuYW1lIjoiYmFob2JpaCIsImVtYWlsIjoiYmFob2JpaDU5OEBjaHlzaXIuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWm51dEtJQVFPUlJSVk5SSzVVdm80dXhZeXFtTjhpajliamJFNkY1MWxlMzVBaFNxdjREYXkiLCJyb2xlIjoicGF0aWVudCIsImRvY3RvckFwcGxpY2F0aW9uU3RhdHVzIjoibm90QXBwbGllZCIsImJhbGFuY2UiOjAsIm5oc051bWJlciI6IjE3Mjk0MDIzMDkzNDQiLCJjb25zdWx0YXRpb25IaXN0b3J5IjpbXSwiY29uc3VsdGF0aW9uVXBjb21pbmciOlsiNjcxNDk3YTUzNmYzNDJkODEyZGM1ZDVhIl0sInNlcnZpY2VzIjpbXSwibm90aWZpY2F0aW9ucyI6WyI2NzE0OTdhNjM2ZjM0MmQ4MTJkYzVkNWMiXSwiaXNEb2N0b3IiOmZhbHNlLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJlbWFpbFZlcmlmeUNvZGUiOm51bGwsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6MzE6NDkuMzUwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6Mzk6NTAuMTcwWiIsIl9fdiI6MSwiaWF0IjoxNzI5NDgyNzgzLCJleHAiOjE3Mjk1NjkxODN9.m_T2ep5SzOPaV5In-D57S_t-KuO_M2uuoA46MUZ82bc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "arafat",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "0199999999",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ABIR/Pictures/Screenshots/Screenshot (10).png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/profile",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update profile by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE0OTVjNTYyN2M5ZDdhMjFiMDQwYjAiLCJuYW1lIjoiYmFob2JpaCIsImVtYWlsIjoiYmFob2JpaDU5OEBjaHlzaXIuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWm51dEtJQVFPUlJSVk5SSzVVdm80dXhZeXFtTjhpajliamJFNkY1MWxlMzVBaFNxdjREYXkiLCJyb2xlIjoicGF0aWVudCIsImRvY3RvckFwcGxpY2F0aW9uU3RhdHVzIjoibm90QXBwbGllZCIsImJhbGFuY2UiOjAsIm5oc051bWJlciI6IjE3Mjk0MDIzMDkzNDQiLCJjb25zdWx0YXRpb25IaXN0b3J5IjpbXSwiY29uc3VsdGF0aW9uVXBjb21pbmciOlsiNjcxNDk3YTUzNmYzNDJkODEyZGM1ZDVhIl0sInNlcnZpY2VzIjpbXSwibm90aWZpY2F0aW9ucyI6WyI2NzE0OTdhNjM2ZjM0MmQ4MTJkYzVkNWMiXSwiaXNEb2N0b3IiOmZhbHNlLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJlbWFpbFZlcmlmeUNvZGUiOm51bGwsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6MzE6NDkuMzUwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6Mzk6NTAuMTcwWiIsIl9fdiI6MSwiaWF0IjoxNzI5NDgyNzgzLCJleHAiOjE3Mjk1NjkxODN9.m_T2ep5SzOPaV5In-D57S_t-KuO_M2uuoA46MUZ82bc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "arafat",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "0199999999",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ABIR/Pictures/Screenshots/Screenshot (10).png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/update-profile-by-user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"update-profile-by-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "approve doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "66fe4d1b0103f5d5f0816f65",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/approve-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"approve-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "66fe4d1b0103f5d5f0816f65",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/cancel-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"cancel-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb25zdWx0YXRpb25VcGNvbWluZyI6W10sImVtYWlsVmVyaWZpZWQiOmZhbHNlLCJfaWQiOiI2NzAxMjcyMjUzN2UxNDk1OTliN2ZjMDgiLCJlbWFpbCI6ImFkbWluQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJFZDVHNaN0tJNS4uWEdvYS41b0xZU3VzdTVqTzVCcEhEb1R2NTFpVjl2eWhZN1IwTWkzWWp1Iiwicm9sZSI6ImFkbWluIiwiZG9jdG9yQXBwbGljYXRpb25TdGF0dXMiOiJub3RBcHBsaWVkIiwiYmFsYW5jZSI6MCwiY29uc3VsdGF0aW9uSGlzdG9yeSI6W10sInVwY29taW5nSGlzdG9yeSI6W10sIm5vdGlmaWNhdGlvbnMiOlsiNjcwMTI3ZWQ3YWQzZWQyYzUzZTQ4OWIzIiwiNjcwMTI4MzU3YWQzZWQyYzUzZTQ4OWJjIiwiNjcwMTJiYjM3YWQzZWQyYzUzZTQ4OWMzIiwiNjcwMzYwYTU2OTM2NjRkMjgyZWFiM2FhIl0sImlzRG9jdG9yIjpmYWxzZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NDY6NDIuOTYzWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMDdUMDQ6MTY6MzcuMjQ0WiIsIl9fdiI6NCwic2VydmljZXMiOltdLCJpYXQiOjE3Mjk1NzQ1MzgsImV4cCI6MTcyOTY2MDkzOH0.yDWW8zufTFJ-fIYe3Tf0lmIWwOXbLyFtbNjM6H2rmsU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "bahobih598@chysir.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "bahobih598@chysir.com",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login as doctor",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/login-as-doctor",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"login-as-doctor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1ZlcmlmaWVkIjpmYWxzZSwiaXNBY3RpdmUiOnRydWUsIl9pZCI6IjY2ZmQyNTNmNjAyMWI4ZDZlZjQxNDRhYiIsImVtYWlsIjoiYWJpckBlbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCR5WmVBaTY5MktIWktQLzZyQ21ETkV1cFcxZTJSMktxenFMUFEuMGJBd0tJY2NKcGhkOVlXVyIsInJvbGUiOiJwYXRpZW50IiwidmVyaWZpZWQiOmZhbHNlLCJ3cm9uZ0F0dGVtcHRzIjowLCJpc0xvY2tlZCI6ZmFsc2UsImxvY2tlZFRpbGwiOiIxOTcwLTAxLTAxVDAwOjAwOjAwLjAwMFoiLCJ1c2VyIjp7Il9pZCI6IjY2ZmQyNTNmNjAyMWI4ZDZlZjQxNDRhOSIsImVtYWlsIjoiYWJpckBlbWFpbC5jb20iLCJiYWxhbmNlIjowLCJuaHNOdW1iZXIiOiIyMTEiLCJjb25zdWx0YXRpb25IaXN0b3J5IjpbXSwiY3JlYXRlZEF0IjoiMjAyNC0xMC0wMlQxMDo0OTozNS4xMTlaIiwidXBkYXRlZEF0IjoiMjAyNC0xMC0wMlQxMDo0OTozNS4xMTlaIiwiX192IjowfSwiY3JlYXRlZEF0IjoiMjAyNC0xMC0wMlQxMDo0OTozNS4yMTNaIiwidXBkYXRlZEF0IjoiMjAyNC0xMC0wMlQxMDo0OTozNS4yMTNaIiwiX192IjowLCJpYXQiOjE3Mjc5MzE2OTEsImV4cCI6MTcyODAxODA5MX0.KNRiKmcCG3dCYv46EMO5SoZx5_x4VMaTvlmnEOnC4g4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"abir@email.com\",\r\n    \"password\": \"123456\",\r\n    \"nhsNumber\": \"211\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/auth/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "service",
+			"item": [
+				{
+					"name": "get all services",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/get-all-services",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"get-all-services"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one service by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/get-service-by-id/670360a4693664d282eab3a7",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"get-service-by-id",
+								"670360a4693664d282eab3a7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update service by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"10 Minutes Telephone Consultation\",\r\n  \"price\": \"5\",\r\n  \"dateTimes\": [\r\n    \"2024-10-06T10:30:00Z\",\r\n    \"2024-10-07T14:30:00Z\"\r\n  ],\r\n  \"consultationType\": \"audio\",\r\n  \"duration\": \"10\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/update-service-by-id/67173b6f9112da9425ec489c",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"update-service-by-id",
+								"67173b6f9112da9425ec489c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add a service",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb25zdWx0YXRpb25VcGNvbWluZyI6W10sImVtYWlsVmVyaWZpZWQiOmZhbHNlLCJfaWQiOiI2NzAxMjcyMjUzN2UxNDk1OTliN2ZjMDgiLCJlbWFpbCI6ImFkbWluQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJFZDVHNaN0tJNS4uWEdvYS41b0xZU3VzdTVqTzVCcEhEb1R2NTFpVjl2eWhZN1IwTWkzWWp1Iiwicm9sZSI6ImFkbWluIiwiZG9jdG9yQXBwbGljYXRpb25TdGF0dXMiOiJub3RBcHBsaWVkIiwiYmFsYW5jZSI6MCwiY29uc3VsdGF0aW9uSGlzdG9yeSI6W10sInVwY29taW5nSGlzdG9yeSI6W10sIm5vdGlmaWNhdGlvbnMiOlsiNjcwMTI3ZWQ3YWQzZWQyYzUzZTQ4OWIzIiwiNjcwMTI4MzU3YWQzZWQyYzUzZTQ4OWJjIiwiNjcwMTJiYjM3YWQzZWQyYzUzZTQ4OWMzIiwiNjcwMzYwYTU2OTM2NjRkMjgyZWFiM2FhIl0sImlzRG9jdG9yIjpmYWxzZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NDY6NDIuOTYzWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMDdUMDQ6MTY6MzcuMjQ0WiIsIl9fdiI6NCwic2VydmljZXMiOltdLCJpYXQiOjE3Mjk1NzQ1MzgsImV4cCI6MTcyOTY2MDkzOH0.yDWW8zufTFJ-fIYe3Tf0lmIWwOXbLyFtbNjM6H2rmsU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"20 point comprehensive medical assessment with detailed report\",\r\n  \"price\": \"5\",\r\n  \"dateTimes\": [\r\n    \"2024-10-20T10:30:00Z\",\r\n    \"2024-10-21T14:30:00Z\"\r\n  ],\r\n  \"consultationType\": \"video\",\r\n  \"duration\": \"20\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/add-service",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"add-service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a service",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"division\": \"General Doctor\",\r\n  \"doctorType\": \"vascularogist\",\r\n  \"dateTimes\": [\r\n    \"2024-10-10T10:30:00Z\",\r\n    \"2024-10-11T14:30:00Z\"\r\n  ],\r\n  \"daysOfWeek\": [\r\n    \"sunday\",\r\n    \"tuesday\"\r\n  ],\r\n  \"consultationType\": \"video\",\r\n  \"doctorId\": \"670127ed7ad3ed2c53e489b1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/delete-service-by-id/67023492407c77af1b078cca",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"delete-service-by-id",
+								"67023492407c77af1b078cca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "disable a service",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"division\": \"General Doctor\",\r\n  \"doctorType\": \"vascularogist\",\r\n  \"dateTimes\": [\r\n    \"2024-10-10T10:30:00Z\",\r\n    \"2024-10-11T14:30:00Z\"\r\n  ],\r\n  \"daysOfWeek\": [\r\n    \"sunday\",\r\n    \"tuesday\"\r\n  ],\r\n  \"consultationType\": \"video\",\r\n  \"doctorId\": \"670127ed7ad3ed2c53e489b1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/disable-service-by-id/670240f95839c596faab28e2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"disable-service-by-id",
+								"670240f95839c596faab28e2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable a service",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"division\": \"General Doctor\",\r\n  \"doctorType\": \"vascularogist\",\r\n  \"dateTimes\": [\r\n    \"2024-10-10T10:30:00Z\",\r\n    \"2024-10-11T14:30:00Z\"\r\n  ],\r\n  \"daysOfWeek\": [\r\n    \"sunday\",\r\n    \"tuesday\"\r\n  ],\r\n  \"consultationType\": \"video\",\r\n  \"doctorId\": \"670127ed7ad3ed2c53e489b1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/enable-service-by-id/670240f95839c596faab28e2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"enable-service-by-id",
+								"670240f95839c596faab28e2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "approve service",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"division\": \"General Doctor\",\r\n  \"doctorType\": \"vascularogist\",\r\n  \"dateTimes\": [\r\n    \"2024-10-10T10:30:00Z\",\r\n    \"2024-10-11T14:30:00Z\"\r\n  ],\r\n  \"daysOfWeek\": [\r\n    \"sunday\",\r\n    \"tuesday\"\r\n  ],\r\n  \"consultationType\": \"video\",\r\n  \"doctorId\": \"670127ed7ad3ed2c53e489b1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/approve-service-by-id/670360a4693664d282eab3a7",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"approve-service-by-id",
+								"670360a4693664d282eab3a7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel service",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"division\": \"General Doctor\",\r\n  \"doctorType\": \"vascularogist\",\r\n  \"dateTimes\": [\r\n    \"2024-10-10T10:30:00Z\",\r\n    \"2024-10-11T14:30:00Z\"\r\n  ],\r\n  \"daysOfWeek\": [\r\n    \"sunday\",\r\n    \"tuesday\"\r\n  ],\r\n  \"consultationType\": \"video\",\r\n  \"doctorId\": \"670127ed7ad3ed2c53e489b1\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/service/cancel-service-by-id/670240f95839c596faab28e2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"service",
+								"cancel-service-by-id",
+								"670240f95839c596faab28e2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "appointment",
+			"item": [
+				{
+					"name": "get all appointments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb25zdWx0YXRpb25VcGNvbWluZyI6W10sImVtYWlsVmVyaWZpZWQiOmZhbHNlLCJfaWQiOiI2NzAxMjcyMjUzN2UxNDk1OTliN2ZjMDgiLCJlbWFpbCI6ImFkbWluQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJFZDVHNaN0tJNS4uWEdvYS41b0xZU3VzdTVqTzVCcEhEb1R2NTFpVjl2eWhZN1IwTWkzWWp1Iiwicm9sZSI6ImFkbWluIiwiZG9jdG9yQXBwbGljYXRpb25TdGF0dXMiOiJub3RBcHBsaWVkIiwiYmFsYW5jZSI6MCwiY29uc3VsdGF0aW9uSGlzdG9yeSI6W10sInVwY29taW5nSGlzdG9yeSI6W10sIm5vdGlmaWNhdGlvbnMiOlsiNjcwMTI3ZWQ3YWQzZWQyYzUzZTQ4OWIzIiwiNjcwMTI4MzU3YWQzZWQyYzUzZTQ4OWJjIiwiNjcwMTJiYjM3YWQzZWQyYzUzZTQ4OWMzIiwiNjcwMzYwYTU2OTM2NjRkMjgyZWFiM2FhIl0sImlzRG9jdG9yIjpmYWxzZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NDY6NDIuOTYzWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMDdUMDQ6MTY6MzcuMjQ0WiIsIl9fdiI6NCwic2VydmljZXMiOltdLCJpYXQiOjE3Mjk1MDcxNDAsImV4cCI6MTcyOTU5MzU0MH0.7VMfQk1Chc5YsvCWR_haBdtLnJPjdpBSM_mS-Q8lHRg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-all-appointments",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-all-appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one appointment by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-appointment-by-id/6704d4406f0ad3773c3d83e4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-appointment-by-id",
+								"6704d4406f0ad3773c3d83e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get appointment by patient id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE0OTVjNTYyN2M5ZDdhMjFiMDQwYjAiLCJuYW1lIjoiYXJhZmF0IiwiZW1haWwiOiJiYWhvYmloNTk4QGNoeXNpci5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRabnV0S0lBUU9SUlJWTlJLNVV2bzR1eFl5cW1OOGlqOWJqYkU2RjUxbGUzNUFoU3F2NERheSIsInJvbGUiOiJwYXRpZW50IiwiZG9jdG9yQXBwbGljYXRpb25TdGF0dXMiOiJub3RBcHBsaWVkIiwiYmFsYW5jZSI6MCwibmhzTnVtYmVyIjoiMTcyOTQwMjMwOTM0NCIsImNvbnN1bHRhdGlvbkhpc3RvcnkiOltdLCJjb25zdWx0YXRpb25VcGNvbWluZyI6WyI2NzE0OTdhNTM2ZjM0MmQ4MTJkYzVkNWEiLCI2NzE1ZWI1MTg2MTNlOTYyNTJiNWQzZjEiXSwic2VydmljZXMiOltdLCJub3RpZmljYXRpb25zIjpbIjY3MTQ5N2E2MzZmMzQyZDgxMmRjNWQ1YyIsIjY3MTVlYjUxODYxM2U5NjI1MmI1ZDNmMyJdLCJpc0RvY3RvciI6ZmFsc2UsImVtYWlsVmVyaWZpZWQiOnRydWUsImVtYWlsVmVyaWZ5Q29kZSI6bnVsbCwiaXNBY3RpdmUiOnRydWUsImlzTG9ja2VkIjpmYWxzZSwiY3JlYXRlZEF0IjoiMjAyNC0xMC0yMFQwNTozMTo0OS4zNTBaIiwidXBkYXRlZEF0IjoiMjAyNC0xMC0yMVQwNTo0OTowNS42NzBaIiwiX192IjoyLCJwaG9uZSI6IjAxOTk5OTk5OTkiLCJpbWFnZSI6InB1YmxpYy91cGxvYWRzL2ltYWdlcy8xNzI5NDg2ODYxMjc0LVNjcmVlbnNob3QgKDgpLnBuZyIsImlhdCI6MTcyOTU5NTE2NSwiZXhwIjoxNzI5NjgxNTY1fQ.WkGzL8znlL13gxduFmDXPmE5-W8zHYrKnlxHiNXJsLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "patientId",
+									"value": "67020d51bf92bbc342325f6f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-appointment-by-patientId",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-appointment-by-patientId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get appointment by doctor id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-appointment-by-doctorId/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-appointment-by-doctorId",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "cancel appointment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6704d4406f0ad3773c3d83e4",
+									"type": "text"
+								},
+								{
+									"key": "patientId",
+									"value": "67020d51bf92bbc342325f6f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/cancel-appointment-by-id/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"cancel-appointment-by-id",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "complete appointment",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6704d4406f0ad3773c3d83e4",
+									"type": "text"
+								},
+								{
+									"key": "patientId",
+									"value": "67020d51bf92bbc342325f6f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/complete-appointment-by-id/6704d4406f0ad3773c3d83e4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"complete-appointment-by-id",
+								"6704d4406f0ad3773c3d83e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "book/create an appointemnt",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE0OTVjNTYyN2M5ZDdhMjFiMDQwYjAiLCJuYW1lIjoiYmFob2JpaCIsImVtYWlsIjoiYmFob2JpaDU5OEBjaHlzaXIuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWm51dEtJQVFPUlJSVk5SSzVVdm80dXhZeXFtTjhpajliamJFNkY1MWxlMzVBaFNxdjREYXkiLCJyb2xlIjoicGF0aWVudCIsImRvY3RvckFwcGxpY2F0aW9uU3RhdHVzIjoibm90QXBwbGllZCIsImJhbGFuY2UiOjAsIm5oc051bWJlciI6IjE3Mjk0MDIzMDkzNDQiLCJjb25zdWx0YXRpb25IaXN0b3J5IjpbXSwiY29uc3VsdGF0aW9uVXBjb21pbmciOlsiNjcxNDk3YTUzNmYzNDJkODEyZGM1ZDVhIl0sInNlcnZpY2VzIjpbXSwibm90aWZpY2F0aW9ucyI6WyI2NzE0OTdhNjM2ZjM0MmQ4MTJkYzVkNWMiXSwiaXNEb2N0b3IiOmZhbHNlLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJlbWFpbFZlcmlmeUNvZGUiOm51bGwsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6MzE6NDkuMzUwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6Mzk6NTAuMTcwWiIsIl9fdiI6MSwiaWF0IjoxNzI5NDgyNzgzLCJleHAiOjE3Mjk1NjkxODN9.m_T2ep5SzOPaV5In-D57S_t-KuO_M2uuoA46MUZ82bc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "serviceId",
+									"value": "670240f95839c596faab28e2",
+									"type": "text"
+								},
+								{
+									"key": "patientId",
+									"value": "671495c5627c9d7a21b040b0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "doctorId",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "dateTime",
+									"value": "2024-10-10T10:30:00.000Z",
+									"type": "text"
+								},
+								{
+									"key": "dayOfWeek",
+									"value": "sunday",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "video",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/book-service",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"book-service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add zoom link",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6703b750cf49329d3dff7b13",
+									"type": "text"
+								},
+								{
+									"key": "zoomLink",
+									"value": "https://us05web.zoom.us/j/85704724161?pwd=mF1SCbPYYC7HjmWJBK5Sk9tYLYI6m5.1",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "bahobih598@chysir.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/add-zoom-link",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"add-zoom-link"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzE0OTVjNTYyN2M5ZDdhMjFiMDQwYjAiLCJuYW1lIjoiYmFob2JpaCIsImVtYWlsIjoiYmFob2JpaDU5OEBjaHlzaXIuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWm51dEtJQVFPUlJSVk5SSzVVdm80dXhZeXFtTjhpajliamJFNkY1MWxlMzVBaFNxdjREYXkiLCJyb2xlIjoicGF0aWVudCIsImRvY3RvckFwcGxpY2F0aW9uU3RhdHVzIjoibm90QXBwbGllZCIsImJhbGFuY2UiOjAsIm5oc051bWJlciI6IjE3Mjk0MDIzMDkzNDQiLCJjb25zdWx0YXRpb25IaXN0b3J5IjpbXSwiY29uc3VsdGF0aW9uVXBjb21pbmciOlsiNjcxNDk3YTUzNmYzNDJkODEyZGM1ZDVhIl0sInNlcnZpY2VzIjpbXSwibm90aWZpY2F0aW9ucyI6WyI2NzE0OTdhNjM2ZjM0MmQ4MTJkYzVkNWMiXSwiaXNEb2N0b3IiOmZhbHNlLCJlbWFpbFZlcmlmaWVkIjp0cnVlLCJlbWFpbFZlcmlmeUNvZGUiOm51bGwsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6MzE6NDkuMzUwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMjBUMDU6Mzk6NTAuMTcwWiIsIl9fdiI6MSwiaWF0IjoxNzI5NDgyNzgzLCJleHAiOjE3Mjk1NjkxODN9.m_T2ep5SzOPaV5In-D57S_t-KuO_M2uuoA46MUZ82bc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6703b750cf49329d3dff7b13",
+									"type": "text"
+								},
+								{
+									"key": "zoomLink",
+									"value": "https://us05web.zoom.us/j/85704724161?pwd=mF1SCbPYYC7HjmWJBK5Sk9tYLYI6m5.1",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "bahobih598@chysir.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/check-login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"check-login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "payments",
+			"item": [
+				{
+					"name": "create payment intent",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6715eb518613e96252b5d3f1",
+									"type": "text"
+								},
+								{
+									"key": "paymentMethodId",
+									"value": "pm_card_visa",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/payment/create-payment-intent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"payment",
+								"create-payment-intent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one payment intent by id",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "paymentId",
+									"value": "pi_3Q9jmXIE7z8j8FQD0QSzE7mF",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/payment/get-payment-intent",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"payment",
+								"get-payment-intent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all payment intents",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb25zdWx0YXRpb25VcGNvbWluZyI6W10sImVtYWlsVmVyaWZpZWQiOmZhbHNlLCJfaWQiOiI2NzAxMjcyMjUzN2UxNDk1OTliN2ZjMDgiLCJlbWFpbCI6ImFkbWluQGVtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJFZDVHNaN0tJNS4uWEdvYS41b0xZU3VzdTVqTzVCcEhEb1R2NTFpVjl2eWhZN1IwTWkzWWp1Iiwicm9sZSI6ImFkbWluIiwiZG9jdG9yQXBwbGljYXRpb25TdGF0dXMiOiJub3RBcHBsaWVkIiwiYmFsYW5jZSI6MCwiY29uc3VsdGF0aW9uSGlzdG9yeSI6W10sInVwY29taW5nSGlzdG9yeSI6W10sIm5vdGlmaWNhdGlvbnMiOlsiNjcwMTI3ZWQ3YWQzZWQyYzUzZTQ4OWIzIiwiNjcwMTI4MzU3YWQzZWQyYzUzZTQ4OWJjIiwiNjcwMTJiYjM3YWQzZWQyYzUzZTQ4OWMzIiwiNjcwMzYwYTU2OTM2NjRkMjgyZWFiM2FhIl0sImlzRG9jdG9yIjpmYWxzZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NDY6NDIuOTYzWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMDdUMDQ6MTY6MzcuMjQ0WiIsIl9fdiI6NCwic2VydmljZXMiOltdLCJpYXQiOjE3Mjk0OTI3MjMsImV4cCI6MTcyOTU3OTEyM30.G3uakQlPLlqgX-037ez_WPUHN-rmu-tobC3Q3SPwKbI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "paymentId",
+									"value": "pi_3Q9jmXIE7z8j8FQD0QSzE7mF",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/payment/get-all-payment-intents",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"payment",
+								"get-all-payment-intents"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notes",
+			"item": [
+				{
+					"name": "get notes by appointment id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/note/get-notes-by-appointment/6704d4406f0ad3773c3d83e4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"note",
+								"get-notes-by-appointment",
+								"6704d4406f0ad3773c3d83e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one appointment by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-appointment-by-id/6704d4406f0ad3773c3d83e4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-appointment-by-id",
+								"6704d4406f0ad3773c3d83e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get appointment by patient id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "patientId",
+									"value": "67020d51bf92bbc342325f6f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-appointment-by-patientId/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-appointment-by-patientId",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get appointment by doctor id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/appointment/get-appointment-by-doctorId/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"appointment",
+								"get-appointment-by-doctorId",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add a note",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6704d4406f0ad3773c3d83e4",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "note title",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "note description",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/note/add-note",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"note",
+								"add-note"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit a note",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "note title updated",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "note description updated",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/note/edit-note/670788abd9b414c6b946fcf5",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"note",
+								"edit-note",
+								"670788abd9b414c6b946fcf5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a note",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/note/delete-note/670788abd9b414c6b946fcf5",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"note",
+								"delete-note",
+								"670788abd9b414c6b946fcf5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "prescription",
+			"item": [
+				{
+					"name": "get prescriptions by appointment id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "doctor@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "doctor",
+									"type": "text"
+								},
+								{
+									"key": "nhsNumber",
+									"value": "211",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "role",
+									"value": "doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/prescription/get-prescriptions-by-appointment/6704d4406f0ad3773c3d83e4",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"prescription",
+								"get-prescriptions-by-appointment",
+								"6704d4406f0ad3773c3d83e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add a prescription",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "appointmentId",
+									"value": "6704d4406f0ad3773c3d83e4",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "note title",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "note description",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/prescription/add-prescription",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"prescription",
+								"add-prescription"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit a prescription",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzAxMjdlZDdhZDNlZDJjNTNlNDg5YjEiLCJlbWFpbCI6ImRvY3RvckBlbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRtSXZLYUovYkVrUEVGby5rLk90U2t1QnpNWUtaMUk4ck5HWHJMYWcyaVZHV2J4ZzUyNEtsNiIsInJvbGUiOiJkb2N0b3IiLCJkb2N0b3JBcHBsaWNhdGlvblN0YXR1cyI6ImFwcHJvdmVkIiwiYmFsYW5jZSI6MCwibmhzTnVtYmVyIjoiMTcyODEyOTAwNTY5NiIsImNvbnN1bHRhdGlvbkhpc3RvcnkiOltdLCJ1cGNvbWluZ0hpc3RvcnkiOltdLCJub3RpZmljYXRpb25zIjpbIjY3MDEyN2VkN2FkM2VkMmM1M2U0ODliMyIsIjY3MDEyODM1N2FkM2VkMmM1M2U0ODliYyIsIjY3MDEyYmIzN2FkM2VkMmM1M2U0ODljMyIsIjY3MDRkNDQwNmYwYWQzNzczYzNkODNlNyIsIjY3MTc2YmFiMmUwOGFmMDc0ZTI0NDllZSIsIjY3MTc4Yzk3NGI4Y2ZiNWYxMTM4NGNlYiJdLCJpc0RvY3RvciI6dHJ1ZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NTA6MDUuNzAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMjJUMTE6Mjk6MjcuNTczWiIsIl9fdiI6MjEsInNlcnZpY2VzIjpbIjY3MDIyZGM3MjI1NGM2ZTA5OGJlOTEwYSIsIjY3MDIzMmMwOTczODlkZjc2ZWQ5YjgxMCIsIjY3MDIzMzIwOTczODlkZjc2ZWQ5YjgxNCIsIjY3MDIzNDA2NDA3Yzc3YWYxYjA3OGNiZSIsIjY3MDIzNDMyNDA3Yzc3YWYxYjA3OGNjMiIsIjY3MDIzNDgyNDA3Yzc3YWYxYjA3OGNjNiIsIjY3MDIzNDkyNDA3Yzc3YWYxYjA3OGNjYSIsIjY3MDIzZjFhNTgzOWM1OTZmYWFiMjhjZiIsIjY3MDIzZjQ4NTgzOWM1OTZmYWFiMjhkMiIsIjY3MDIzZjY4NTgzOWM1OTZmYWFiMjhkNSIsIjY3MDI0MDdkNTgzOWM1OTZmYWFiMjhkOSIsIjY3MDI0MGM5NTgzOWM1OTZmYWFiMjhkYyIsIjY3MDI0MGUyNTgzOWM1OTZmYWFiMjhkZiIsIjY3MDI0MGY5NTgzOWM1OTZmYWFiMjhlMiIsIjY3MDM2MGE0NjkzNjY0ZDI4MmVhYjNhNyJdLCJjb25zdWx0YXRpb25VcGNvbWluZyI6W10sImVtYWlsVmVyaWZpZWQiOmZhbHNlLCJpYXQiOjE3Mjk1OTY1NzIsImV4cCI6MTcyOTY4Mjk3Mn0.xp7XlxNramLllLxdt_dI8TJW6arFzl5muvxI2pV5iQo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "prescriptiontitle updated",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "prescription description updated",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/prescription/edit-prescription/67177e0988b9749de5ac6358",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"prescription",
+								"edit-prescription",
+								"67177e0988b9749de5ac6358"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a prescription",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzAxMjdlZDdhZDNlZDJjNTNlNDg5YjEiLCJlbWFpbCI6ImRvY3RvckBlbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRtSXZLYUovYkVrUEVGby5rLk90U2t1QnpNWUtaMUk4ck5HWHJMYWcyaVZHV2J4ZzUyNEtsNiIsInJvbGUiOiJkb2N0b3IiLCJkb2N0b3JBcHBsaWNhdGlvblN0YXR1cyI6ImFwcHJvdmVkIiwiYmFsYW5jZSI6MCwibmhzTnVtYmVyIjoiMTcyODEyOTAwNTY5NiIsImNvbnN1bHRhdGlvbkhpc3RvcnkiOltdLCJ1cGNvbWluZ0hpc3RvcnkiOltdLCJub3RpZmljYXRpb25zIjpbIjY3MDEyN2VkN2FkM2VkMmM1M2U0ODliMyIsIjY3MDEyODM1N2FkM2VkMmM1M2U0ODliYyIsIjY3MDEyYmIzN2FkM2VkMmM1M2U0ODljMyIsIjY3MDRkNDQwNmYwYWQzNzczYzNkODNlNyIsIjY3MTc2YmFiMmUwOGFmMDc0ZTI0NDllZSIsIjY3MTc4Yzk3NGI4Y2ZiNWYxMTM4NGNlYiJdLCJpc0RvY3RvciI6dHJ1ZSwiaXNWZXJpZmllZCI6ZmFsc2UsImlzQWN0aXZlIjp0cnVlLCJpc0xvY2tlZCI6ZmFsc2UsImNyZWF0ZWRBdCI6IjIwMjQtMTAtMDVUMTE6NTA6MDUuNzAwWiIsInVwZGF0ZWRBdCI6IjIwMjQtMTAtMjJUMTE6Mjk6MjcuNTczWiIsIl9fdiI6MjEsInNlcnZpY2VzIjpbIjY3MDIyZGM3MjI1NGM2ZTA5OGJlOTEwYSIsIjY3MDIzMmMwOTczODlkZjc2ZWQ5YjgxMCIsIjY3MDIzMzIwOTczODlkZjc2ZWQ5YjgxNCIsIjY3MDIzNDA2NDA3Yzc3YWYxYjA3OGNiZSIsIjY3MDIzNDMyNDA3Yzc3YWYxYjA3OGNjMiIsIjY3MDIzNDgyNDA3Yzc3YWYxYjA3OGNjNiIsIjY3MDIzNDkyNDA3Yzc3YWYxYjA3OGNjYSIsIjY3MDIzZjFhNTgzOWM1OTZmYWFiMjhjZiIsIjY3MDIzZjQ4NTgzOWM1OTZmYWFiMjhkMiIsIjY3MDIzZjY4NTgzOWM1OTZmYWFiMjhkNSIsIjY3MDI0MDdkNTgzOWM1OTZmYWFiMjhkOSIsIjY3MDI0MGM5NTgzOWM1OTZmYWFiMjhkYyIsIjY3MDI0MGUyNTgzOWM1OTZmYWFiMjhkZiIsIjY3MDI0MGY5NTgzOWM1OTZmYWFiMjhlMiIsIjY3MDM2MGE0NjkzNjY0ZDI4MmVhYjNhNyJdLCJjb25zdWx0YXRpb25VcGNvbWluZyI6W10sImVtYWlsVmVyaWZpZWQiOmZhbHNlLCJpYXQiOjE3Mjk1OTY1NzIsImV4cCI6MTcyOTY4Mjk3Mn0.xp7XlxNramLllLxdt_dI8TJW6arFzl5muvxI2pV5iQo",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/prescription/delete-prescription/67177e0988b9749de5ac6358",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"prescription",
+								"delete-prescription",
+								"67177e0988b9749de5ac6358"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "review rating",
+			"item": [
+				{
+					"name": "get all reviews",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/review/all-reviews",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"review",
+								"all-reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get one review by review id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/review/get-one-review/67133868c75ea4a61ba42ce3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"review",
+								"get-one-review",
+								"67133868c75ea4a61ba42ce3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get review by user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "670b4e40ce98760d0778097f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/review/review-by-user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"review",
+								"review-by-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add a review rating",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "review",
+									"value": "what a nice website",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "670b4e40ce98760d0778097f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/review/add-review",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"review",
+								"add-review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a review rating",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "review",
+									"value": "again and again",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "670b4e40ce98760d0778097f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/review/update-review/67133868c75ea4a61ba42ce3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"review",
+								"update-review",
+								"67133868c75ea4a61ba42ce3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a review rating",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "review",
+									"value": "again and again",
+									"type": "text"
+								},
+								{
+									"key": "rating",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "userId",
+									"value": "670b4e40ce98760d0778097f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/review/delete-review/67133868c75ea4a61ba42ce3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"review",
+								"delete-review",
+								"67133868c75ea4a61ba42ce3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "terms of service",
+			"item": [
+				{
+					"name": "get all terms of services",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "doctorId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/terms-of-service/get-terms-of-service",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"terms-of-service",
+								"get-terms-of-service"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add terms of service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "content",
+									"value": "Terms of service (also known as terms of use and terms and conditions, commonly abbreviated as TOS or ToS, ToU or T&C) are the legal agreements between a service provider and a person who wants to use that service. The person must agree to abide by the terms of service in order to use the offered service",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/terms-of-service/add-terms-of-service",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"terms-of-service",
+								"add-terms-of-service"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "faqs",
+			"item": [
+				{
+					"name": "add faq",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "question",
+									"value": "why should i use this",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "because this is amazing",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/faq/add-faq",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"faq",
+								"add-faq"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all faqs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "question",
+									"value": "why should i use this",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "because this is amazing",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/faq/get-all-faqs",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"faq",
+								"get-all-faqs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update faq",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/faq/update-faq?faqId=671377457972711a62117aa8&question=updated question&answer=updated answer",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"faq",
+								"update-faq"
+							],
+							"query": [
+								{
+									"key": "faqId",
+									"value": "671377457972711a62117aa8"
+								},
+								{
+									"key": "question",
+									"value": "updated question"
+								},
+								{
+									"key": "answer",
+									"value": "updated answer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete an faq",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "question",
+									"value": "why should i use this",
+									"type": "text"
+								},
+								{
+									"key": "answer",
+									"value": "because this is amazing",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/faq/delete-faq/6713783a86dc46f0be7e470e",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"faq",
+								"delete-faq",
+								"6713783a86dc46f0be7e470e"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chats / messages",
+			"item": [
+				{
+					"name": "access/create chats",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/chats/access-chat/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"chats",
+								"access-chat",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all chats of a user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "670127ed7ad3ed2c53e489b1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/chats/get-users-all-chat/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"chats",
+								"get-users-all-chat",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all messages of a chat",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "chatId",
+									"value": "670604da1b64cee4e5085c85",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/chats/fetch-messages",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"chats",
+								"fetch-messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "send message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "chatId",
+									"value": "670604da1b64cee4e5085c85",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "hi doctor",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/chats/send-message/67020d51bf92bbc342325f6f",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"chats",
+								"send-message",
+								"67020d51bf92bbc342325f6f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "notification",
+			"item": [
+				{
+					"name": "get notificaion by userId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "67012722537e149599b7fc08",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/notifications-by-user",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"notifications-by-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all notificaions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userId",
+									"value": "67012722537e149599b7fc08",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/all-notifications",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"all-notifications"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://192.168.12.158:3000",
+			"type": "string"
+		}
+	]
+}
