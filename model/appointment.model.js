@@ -36,7 +36,7 @@ const appointmentSchema = new Schema(
       enum: ["upcoming", "completed", "cancelled"],
       default: "upcoming",
     },
-    type: { type: String, enum: ["video", "phone"], required: true },
+    type: { type: String, enum: ["video", "audio"], required: true },
     zoomLink: { type: String },
     patientEmail: { type: String },
     notes: [
