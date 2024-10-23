@@ -111,20 +111,6 @@ const signup = async (req, res) => {
 
 const signupAsDoctor = async (req, res) => {
   try {
-    // const validation = validationResult(req).array();
-    // console.log(validation);
-    // if (validation.length > 0) {
-    //   return res
-    //     .status(HTTP_STATUS.OK)
-    //     .send(failure("Failed to add the user", validation[0].msg));
-    // }
-
-    // if (req.body.role === "admin") {
-    //   return res
-    //     .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
-    //     .send(failure(`Admin cannot be signed up`));
-    // }
-
     if (!req.body.email || !req.body.password) {
       return res
         .status(HTTP_STATUS.BAD_REQUEST)
@@ -133,11 +119,11 @@ const signupAsDoctor = async (req, res) => {
 
     const emailCheck = await User.findOne({ email: req.body.email });
 
-    const admin = await User.findOne({ email: "admin@email.com" });
+    const admin = await User.findOne({ role: "admin" });
 
-    if (!admin) {
-      return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Admin not found"));
-    }
+    // if (!admin) {
+    //   return res.status(HTTP_STATUS.NOT_FOUND).send(failure("Admin not found"));
+    // }
 
     if (emailCheck && emailCheck.doctorApplicationStatus === "pending") {
       return res
@@ -163,10 +149,29 @@ const signupAsDoctor = async (req, res) => {
       emailCheck.doctorApplicationStatus = "pending";
       await emailCheck.save();
 
-      // Create a new notification for the admin and doctor
+      // const emailVerifyCode =
+      //   Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000; // 4 digits
+      const emailVerifyCode = Math.floor(100000 + Math.random() * 900000); //6 digits
+      emailCheck.emailVerifyCode = emailVerifyCode;
+      await emailCheck.save();
+
+      if (!emailCheck.emailVerified) {
+        const emailData = {
+          email: emailCheck.email,
+          subject: "Account Activation & Doctor Application Successful Email",
+          html: `
+                        <h1>Hello, ${emailCheck?.name || "User"}</h1>
+                        <p>Congrats, you have successfully applied for the doctor's position</p>
+                        <p>Your email verification code is <h3>${emailVerifyCode}</h3></p>
+                        
+                      `,
+        };
+        emailWithNodemailerGmail(emailData);
+      }
+
       const newNotification = await Notification.create({
         applicant: emailCheck._id,
-        admin: admin._id,
+        admin: admin._id || null,
         status: "pending",
         message: `${emailCheck.email} has applied for the doctor role.`,
       });
@@ -180,8 +185,10 @@ const signupAsDoctor = async (req, res) => {
       emailCheck.notifications.push(newNotification._id);
       await emailCheck.save();
 
-      admin.notifications.push(newNotification._id);
-      await admin.save();
+      if (admin) {
+        admin.notifications.push(newNotification._id);
+        await admin.save();
+      }
 
       return res
         .status(HTTP_STATUS.OK)
@@ -208,10 +215,24 @@ const signupAsDoctor = async (req, res) => {
         .send(failure("Account couldnt be created"));
     }
 
-    // Create a new notification for the admin and doctor
+    const emailVerifyCode = Math.floor(100000 + Math.random() * 900000); //6 digits
+    newUser.emailVerifyCode = emailVerifyCode;
+    await newUser.save();
+    const emailData = {
+      email: req.body.email,
+      subject: "Account Activation & Doctor Application Successful Email",
+      html: `
+                    <h1>Hello, ${req.body.name || "User"}</h1>
+                    <p>Congrats, you have successfully applied for the doctor's position</p>
+                    <p>Your email verification code is <h3>${emailVerifyCode}</h3></p>
+                    
+                  `,
+    };
+    emailWithNodemailerGmail(emailData);
+
     const newNotification = await Notification.create({
       applicant: newUser._id,
-      admin: admin._id,
+      admin: admin._id || null,
       status: "pending",
       message: `${newUser.email} has applied for the doctor role.`,
     });
@@ -225,13 +246,10 @@ const signupAsDoctor = async (req, res) => {
     newUser.notifications.push(newNotification._id);
     await newUser.save();
 
-    admin.notifications.push(newNotification._id);
-    await admin.save();
-
-    // payload, secret, JWT expiration
-    // const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET, {
-    //     expiresIn: process.env.JWT_EXPIRES_IN
-    // })
+    if (admin) {
+      admin.notifications.push(newNotification._id);
+      await admin.save();
+    }
 
     res
       .status(HTTP_STATUS.OK)
