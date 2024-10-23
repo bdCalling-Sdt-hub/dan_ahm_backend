@@ -97,7 +97,7 @@ const bookAppointment = async (req, res) => {
       applicant: patientId,
       // admin: service.doctor,
       serviceId,
-      type: "serviceApplication",
+      type: "service",
       message: `A new appointment has been created for service ${service.division}`,
     });
     await notification.save();
