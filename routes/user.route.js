@@ -54,12 +54,4 @@ routes.patch(
   updateProfileByUser
 );
 
-// // updates user data
-// routes.patch(
-//   "/auth/update-user-by-admin/:id",
-//   isAuthorized,
-//   userValidator.update,
-//   UserController.updateUserByAdmin
-// );
-
 module.exports = routes;
