@@ -93,10 +93,15 @@ const signup = async (req, res) => {
     };
 
     emailWithNodemailerGmail(emailData);
+
+    const token = jwt.sign(newUser.toObject(), process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+    res.setHeader("Authorization", token);
     if (newUser) {
       return res
         .status(HTTP_STATUS.OK)
-        .send(success("Account created successfully ", { newUser }));
+        .send(success("Account created successfully ", { newUser, token }));
     }
     return res
       .status(HTTP_STATUS.BAD_REQUEST)
