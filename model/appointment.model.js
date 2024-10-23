@@ -13,6 +13,10 @@ const appointmentSchema = new Schema(
       ref: "User",
       required: true,
     },
+    nhsNumber: {
+      type: String,
+      required: false,
+    },
     doctorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

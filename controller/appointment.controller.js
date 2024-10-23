@@ -9,7 +9,8 @@ const HTTP_STATUS = require("../constants/statusCodes");
 // Book an appointment
 const bookAppointment = async (req, res) => {
   try {
-    const { serviceId, dateTime, dayOfWeek, type, description } = req.body;
+    const { serviceId, dateTime, dayOfWeek, type, description, nhsNumber } =
+      req.body;
 
     if (!req.user) {
       return res
@@ -78,6 +79,8 @@ const bookAppointment = async (req, res) => {
       dayOfWeek,
       type,
     });
+
+    appointment.nhsNumber = nhsNumber || patient.nhsNumber;
 
     // if (appointment) {
     //   // Remove the selected dateTime from the service's available times
