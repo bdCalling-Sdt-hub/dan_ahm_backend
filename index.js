@@ -1,12 +1,7 @@
 const status = require("express-status-monitor");
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-
-const morgan = require("morgan");
-const fs = require("fs");
-const path = require("path");
 
 const databaseConnection = require("./config/database");
 const UserRouter = require("./routes/user.route");
@@ -20,6 +15,7 @@ const ReviewRouter = require("./routes/review.route");
 const termsOfServiceRouter = require("./routes/termsOfService.route");
 const faqRouter = require("./routes/faq.route");
 const prescriptionRouter = require("./routes/prescription.route");
+const tipRouter = require("./routes/tip.route");
 
 const app = express();
 
@@ -48,15 +44,7 @@ app.use((err, req, res, next) => {
 
 const PORT = 3000;
 
-// const accessLogStream = fs.createWriteStream(
-//   path.join(__dirname, "/server/access.log"),
-//   { flags: "a" }
-// );
-
 app.use(status());
-
-// Use morgan with a combined format and stream it to the access log file
-// app.use(morgan("combined", { stream: accessLogStream }));
 
 app.use("/users", UserRouter);
 app.use("/users", AuthRouter);
@@ -69,8 +57,7 @@ app.use("/chats", ChatRouter);
 app.use("/review", ReviewRouter);
 app.use("/terms-of-service", termsOfServiceRouter);
 app.use("/faq", faqRouter);
-
-// app.use()
+app.use("/tip", tipRouter);
 
 // Route to handle all other invalid requests
 app.use((req, res) => {
