@@ -14,7 +14,10 @@ const {
   changePassword,
 } = require("../controller/auth.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
-const { isAuthorizedUser } = require("../middleware/authValidationJWT");
+const {
+  isAuthorizedUser,
+  isAuthorizedAdmin,
+} = require("../middleware/authValidationJWT");
 // const { authValidator } = require("../middleware/authValidation");
 
 // for signing up
@@ -67,6 +70,7 @@ routes.post(
   "/auth/approve-doctor",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   approveDoctor
 );
 

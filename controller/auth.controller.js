@@ -313,8 +313,14 @@ const approveDoctor = async (req, res) => {
         .send(failure("Please provide doctorId"));
     }
 
+    if (!req.user) {
+      return res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .send(failure("Unauthorized! Admin access only"));
+    }
+
     const doctor = await User.findById(doctorId);
-    const admin = await User.findOne({ email: "admin@email.com" });
+    const admin = await User.findOne({ email: req.user.email });
 
     if (!doctor) {
       return res
@@ -332,6 +338,36 @@ const approveDoctor = async (req, res) => {
     doctor.isDoctor = true;
     doctor.role = "doctor";
     await doctor.save();
+
+    const emailData = {
+      email: doctor.email,
+      subject: "Application Approved - Welcome to Our Medical Team!",
+      html: `
+            <html>
+              <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2 style="color: #4CAF50;">Congratulations, Dr. ${
+                  doctor.name || "User"
+                }!</h2>
+                <p>We are pleased to inform you that your application to join our medical team has been <strong>approved</strong>.</p>
+                
+                <p>Thank you for choosing to collaborate with us, and we look forward to working with you to provide top-notch care to our patients.</p>
+                
+                <p>Below are some important next steps to get started:</p>
+                <ul>
+                  <li>Complete your profile in the doctor’s portal.</li>
+                  <li>Review our policies and guidelines.</li>
+                </ul>
+
+                <p>If you have any questions, feel free to reach out to us at any time.</p>
+
+                <p>Sincerely,<br/>
+                <strong>My Doctor Clinic</strong><br/>
+                <a href="mailto:support@medicalteam.com">support@mydoctorclinic.com</a></p>
+              </body>
+            </html>
+          `,
+    };
+    emailWithNodemailerGmail(emailData);
 
     // Create a new notification for the admin doctor
     const newNotification = await Notification.create({
