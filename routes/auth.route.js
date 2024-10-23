@@ -79,6 +79,7 @@ routes.post(
   "/auth/cancel-doctor",
   // userValidator.create,
   // authValidator.create,
+  isAuthorizedAdmin,
   cancelDoctor
 );
 

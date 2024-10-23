@@ -362,7 +362,7 @@ const approveDoctor = async (req, res) => {
 
                 <p>Sincerely,<br/>
                 <strong>My Doctor Clinic</strong><br/>
-                <a href="mailto:support@medicalteam.com">support@mydoctorclinic.com</a></p>
+                <a href="mailto:support@mydoctorclinic.com">support@mydoctorclinic.com</a></p>
               </body>
             </html>
           `,
@@ -409,8 +409,14 @@ const cancelDoctor = async (req, res) => {
         .send(failure("Please provide doctorId"));
     }
 
+    if (!req.user) {
+      return res
+        .status(HTTP_STATUS.UNAUTHORIZED)
+        .send(failure("Unauthorized! Admin access only"));
+    }
+
     const doctor = await User.findById(doctorId);
-    const admin = await User.findOne({ email: "admin@email.com" });
+    const admin = await User.findOne({ email: req.user.email });
 
     if (!doctor) {
       return res
@@ -430,6 +436,33 @@ const cancelDoctor = async (req, res) => {
     doctor.doctorApplicationStatus = "cancelled";
     doctor.isDoctor = false;
     doctor.role = "patient";
+
+    const emailData = {
+      email: doctor.email,
+      subject: "Application Status - Doctor Application",
+      html: `
+          <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+              <h2 style="color: #f44336;">Dear Dr. ${
+                doctor.name || "User"
+              },</h2>
+              <p>We regret to inform you that after careful review, your application to join our medical team has been <strong>declined</strong> at this time.</p>
+              
+              <p>We appreciate your interest in collaborating with us. Unfortunately, we are unable to proceed with your application due to the current needs and requirements of our team.</p>
+              
+              <p>If you have any questions or would like further clarification, please do not hesitate to reach out. We encourage you to reapply in the future as new opportunities may become available.</p>
+
+              <p>Thank you once again for your interest, and we wish you success in your future endeavors.</p>
+
+              <p>Sincerely,<br/>
+              <strong>My Doctor Clinic</strong><br/>
+              <a href="mailto:support@mydoctorclinic.com">support@mydoctorclinic.com</a></p>
+            </body>
+          </html>
+                  `,
+    };
+    emailWithNodemailerGmail(emailData);
+    console.log(doctor.email);
 
     await doctor.save();
 
