@@ -90,7 +90,9 @@ const bookAppointment = async (req, res) => {
     //   await service.save();
     // }
 
-    await appointment.save();
+    const createdAppointment = await appointment
+      .save()
+      .then((appointment) => appointment.populate("serviceId"));
 
     // Create a notification for the doctor
     const notification = new Notification({
@@ -105,13 +107,17 @@ const bookAppointment = async (req, res) => {
     // doctor.notifications.push(notification._id);
     // await doctor.save();
 
-    patient.consultationUpcoming.push(appointment._id);
+    patient.consultationUpcoming.push(createdAppointment._id);
     patient.notifications.push(notification._id);
     await patient.save();
 
     return res
       .status(HTTP_STATUS.CREATED)
-      .send(success("Service successfully booked", { appointment }));
+      .send(
+        success("Service successfully booked", {
+          appointment: createdAppointment,
+        })
+      );
   } catch (err) {
     console.error(err);
     return res
@@ -119,6 +125,7 @@ const bookAppointment = async (req, res) => {
       .send(failure("Failed to book the service"));
   }
 };
+
 // Cancel an appointment
 const cancelAppointment = async (req, res) => {
   try {
