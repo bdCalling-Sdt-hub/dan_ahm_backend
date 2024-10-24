@@ -10,12 +10,17 @@ const createPaymentIntent = async (req, res) => {
   try {
     const { appointmentId, paymentMethodId, amount } = req.body;
 
+    if (!appointmentId || !paymentMethodId || !amount) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("please provide all the fields"));
+    }
+
     // Fetch the appointment details
     const appointment = await Appointment.findById(appointmentId).populate(
       "patientId"
     );
 
-    console.log("appointment", appointment.patientId);
     if (!appointment) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
@@ -24,21 +29,54 @@ const createPaymentIntent = async (req, res) => {
 
     // Create a payment intent
     let paymentIntent;
-    try {
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: amount * 100, // amount in cents
-        currency: "usd", // or your preferred currency
-        payment_method: paymentMethodId,
-        confirm: false, // Do not confirm automatically
-      });
-    } catch (error) {
-      console.log(error);
-    }
+
+    paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100, // amount in cents
+      currency: "usd", // or your preferred currency
+      payment_method: paymentMethodId,
+      confirm: false, // Do not confirm automatically
+    });
 
     if (!paymentIntent) {
       return res
         .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         .send(failure("Payment failed"));
+    }
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Payment processed successfully", paymentIntent));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Payment failed", err.message));
+  }
+};
+
+const confirmPaymentbyPaymentIntent = async (req, res) => {
+  try {
+    const { paymentIntent, appointmentId } = req.body;
+
+    console.log("paymentIntent", paymentIntent);
+    console.log("appointmentId", appointmentId);
+
+    if (!paymentIntent || !appointmentId) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("please provide paymentIntent and appointmentId"));
+    }
+
+    const appointment = await Appointment.findById(appointmentId).populate(
+      "patientId serviceId"
+    );
+
+    console.log("appointment", appointment);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
     }
 
     // Update the appointment with payment status
@@ -51,10 +89,14 @@ const createPaymentIntent = async (req, res) => {
       user: appointment.patientId,
       appointment: appointment._id,
       paymentId: paymentIntent.id,
-      amount: amount,
+      amount: paymentIntent.amount / 100,
       status: "paid",
     });
     await transaction.save();
+
+    console.log("paymentIntent", paymentIntent.amount);
+
+    console.log("transaction", transaction);
 
     const service = await Service.findById(appointment.serviceId);
     const selectedDateTime = new Date(appointment.dateTime).getTime();
@@ -66,6 +108,7 @@ const createPaymentIntent = async (req, res) => {
       );
       await service.save();
     }
+
     const patientName = appointment.patientId.name || "patient";
     const dateTime = new Date(appointment.dateTime).toLocaleString();
     const emailData = {
@@ -84,15 +127,14 @@ const createPaymentIntent = async (req, res) => {
 
     emailWithNodemailerGmail(emailData);
 
-    // Respond to the client with the payment confirmation
     return res
       .status(HTTP_STATUS.OK)
-      .send(success("Payment processed successfully", paymentIntent));
+      .send(success("Payment confirmed successfully", paymentIntent));
   } catch (err) {
     console.error(err);
-    // return res
-    //   .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-    //   .send(failure("Payment failed", err.message));
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Payment failed", err.message));
   }
 };
 
@@ -140,4 +182,5 @@ module.exports = {
   createPaymentIntent,
   getPaymentIntent,
   getAllPaymentIntents,
+  confirmPaymentbyPaymentIntent,
 };
