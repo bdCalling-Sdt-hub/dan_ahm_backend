@@ -23,15 +23,19 @@ const createPaymentIntent = async (req, res) => {
     }
 
     // Create a payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100, // amount in cents
-      currency: "usd", // or your preferred currency
-      payment_method: paymentMethodId,
-      confirm: true,
-      automatic_payment_methods: { enabled: true, allow_redirects: "never" },
-    });
+    let paymentIntent;
+    try {
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: amount * 100, // amount in cents
+        currency: "usd", // or your preferred currency
+        payment_method: paymentMethodId,
+        confirm: false, // Do not confirm automatically
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
-    if (!paymentIntent || paymentIntent.status !== "succeeded") {
+    if (!paymentIntent) {
       return res
         .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
         .send(failure("Payment failed"));
@@ -86,9 +90,9 @@ const createPaymentIntent = async (req, res) => {
       .send(success("Payment processed successfully", paymentIntent));
   } catch (err) {
     console.error(err);
-    return res
-      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-      .send(failure("Payment failed", err.message));
+    // return res
+    //   .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+    //   .send(failure("Payment failed", err.message));
   }
 };
 
