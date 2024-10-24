@@ -64,6 +64,11 @@ app.use((req, res) => {
   return res.status(400).send({ message: "Route doesnt exist" });
 });
 
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).send({ message: "Internal Server Error" });
+});
+
 databaseConnection(() => {
   app.listen(PORT, () => {
     console.log(`server running on ${PORT}`);
