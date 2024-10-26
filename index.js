@@ -2,6 +2,7 @@ const status = require("express-status-monitor");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const path = require("path");
 
 const databaseConnection = require("./config/database");
 const UserRouter = require("./routes/user.route");
@@ -45,6 +46,8 @@ app.use((err, req, res, next) => {
 const PORT = 3000;
 
 app.use(status());
+
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use("/users", UserRouter);
 app.use("/users", AuthRouter);
