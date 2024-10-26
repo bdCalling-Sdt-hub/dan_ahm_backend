@@ -49,12 +49,10 @@ const getAllPatients = async (req, res) => {
       return res.status(HTTP_STATUS.OK).send(
         success("Successfully received all patients", {
           result: users,
-          pagination: {
-            page,
-            limit,
-            total,
-            totalPages: Math.ceil(total / limit),
-          },
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
         })
       );
     }
@@ -67,11 +65,34 @@ const getAllPatients = async (req, res) => {
 
 const getAllDoctors = async (req, res) => {
   try {
-    const user = await UserModel.find({ role: "doctor" }).select("-__v");
-    if (user.length) {
+    let { search, page, limit } = req.query;
+    if (page < 1 || limit < 0) {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(failure("Page and limit values must be at least 1"));
+    }
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+    const query = { role: "doctor" };
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+    const users = await UserModel.find(query)
+      .select("-__v")
+      .skip((page - 1) * limit)
+      .limit(limit * 1);
+    const total = await UserModel.countDocuments(query);
+    if (users.length) {
       return res.status(HTTP_STATUS.OK).send(
         success("Successfully received all doctors", {
-          result: user,
+          result: users,
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
         })
       );
     }
