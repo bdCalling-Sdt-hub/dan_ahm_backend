@@ -89,18 +89,33 @@ const updateServiceById = async (req, res) => {
 
 const getAllServices = async (req, res) => {
   try {
-    const services = await Service.find({ isDeleted: false }).populate({
-      path: "doctor",
-      select: "-notifications -nhsNumber -balance -__v",
-    });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const services = await Service.find({ isDeleted: false })
+      .populate({
+        path: "doctor",
+        select: "-notifications -nhsNumber -balance -__v",
+      })
+      .skip(skip)
+      .limit(limit);
+    const count = await Service.countDocuments({ isDeleted: false });
+
     if (!services) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("Services not found"));
     }
-    return res
-      .status(HTTP_STATUS.OK)
-      .send(success("Successfully received all services", services));
+    return res.status(HTTP_STATUS.OK).send(
+      success("Successfully received all services", {
+        result: services,
+        count,
+        page,
+        limit,
+        totalPages: Math.ceil(count / limit),
+      })
+    );
   } catch (error) {
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
