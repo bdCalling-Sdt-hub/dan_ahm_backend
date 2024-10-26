@@ -89,7 +89,7 @@ const updateServiceById = async (req, res) => {
 
 const getAllServices = async (req, res) => {
   try {
-    const services = await Service.find().populate({
+    const services = await Service.find({ isDeleted: false }).populate({
       path: "doctor",
       select: "-notifications -nhsNumber -balance -__v",
     });
