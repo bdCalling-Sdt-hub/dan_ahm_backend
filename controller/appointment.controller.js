@@ -275,7 +275,10 @@ const getAllAppointments = async (req, res) => {
 
     const appointments = await Appointment.find(query)
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .populate("doctorId")
+      .populate("notes")
+      .populate("prescription");
     const total = await Appointment.countDocuments(query);
 
     if (!appointments.length) {
