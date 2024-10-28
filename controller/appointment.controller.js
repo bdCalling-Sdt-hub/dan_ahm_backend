@@ -111,13 +111,11 @@ const bookAppointment = async (req, res) => {
     patient.notifications.push(notification._id);
     await patient.save();
 
-    return res
-      .status(HTTP_STATUS.CREATED)
-      .send(
-        success("Service successfully booked", {
-          appointment: createdAppointment,
-        })
-      );
+    return res.status(HTTP_STATUS.CREATED).send(
+      success("Service successfully booked", {
+        appointment: createdAppointment,
+      })
+    );
   } catch (err) {
     console.error(err);
     return res
@@ -261,15 +259,39 @@ const completeAppointment = async (req, res) => {
 
 const getAllAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find();
-    if (!appointments) {
+    let { status, page, limit } = req.query;
+    if (page < 1 || limit < 0) {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(failure("Page and limit values must be at least 1"));
+    }
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 10;
+
+    const query = {};
+    if (status) {
+      query.status = status;
+    }
+
+    const appointments = await Appointment.find(query)
+      .skip((page - 1) * limit)
+      .limit(limit);
+    const total = await Appointment.countDocuments(query);
+
+    if (!appointments.length) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("Appointments not found"));
     }
-    return res
-      .status(HTTP_STATUS.OK)
-      .send(success("Appointments retrieved successfully", appointments));
+    return res.status(HTTP_STATUS.OK).send(
+      success("Appointments retrieved successfully", {
+        result: appointments,
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      })
+    );
   } catch (err) {
     console.error(err);
     return res
