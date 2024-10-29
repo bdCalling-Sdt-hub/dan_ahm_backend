@@ -3,6 +3,7 @@ const routes = express();
 const {
   bookAppointment,
   addZoomLinkToAppointment,
+  assignDoctorToAppointment,
   cancelAppointment,
   completeAppointment,
   getAllAppointments,
@@ -57,7 +58,7 @@ routes.get(
 );
 
 routes.get(
-  "/get-appointment-by-doctorId/:id",
+  "/get-appointment-by-doctorId/:doctorId",
   // userValidator.create,
   // authValidator.create,
   getAppointmentByDoctorId
@@ -77,6 +78,14 @@ routes.patch(
   // authValidator.create,
   isAuthorizedAdmin,
   completeAppointment
+);
+
+routes.patch(
+  "/assign-doctor-to-appointment",
+  // userValidator.create,
+  // authValidator.create,
+  isAuthorizedAdmin,
+  assignDoctorToAppointment
 );
 
 module.exports = routes;

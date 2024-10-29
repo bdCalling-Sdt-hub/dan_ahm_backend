@@ -6,7 +6,8 @@ const Nootification = require("../model/notification.model");
 
 const addService = async (req, res) => {
   try {
-    const { title, price, dateTimes, consultationType, duration } = req.body;
+    const { title, price, dateTimes, consultationType, duration, doctorId } =
+      req.body;
 
     const daysOfWeek = dateTimes.map((dateTime) => {
       const day = new Date(dateTime).toLocaleString(undefined, {
@@ -29,6 +30,7 @@ const addService = async (req, res) => {
       consultationType,
       duration,
       status: "approved",
+      doctor: doctorId && doctorId,
     });
 
     if (!newService) {

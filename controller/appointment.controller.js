@@ -244,6 +244,42 @@ const addZoomLinkToAppointment = async (req, res) => {
   }
 };
 
+const assignDoctorToAppointment = async (req, res) => {
+  try {
+    const { appointmentId, doctorId } = req.body;
+
+    if (!appointmentId || !doctorId) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("please provide appointmentId and doctorId"));
+    }
+
+    // Find the appointment
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+    });
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+
+    // Assign the doctor to the appointment
+    appointment.doctorId = doctorId;
+    await appointment.save();
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Doctor assigned successfully", { appointment }));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to assign doctor"));
+  }
+};
+
 const completeAppointment = async (req, res) => {
   try {
     const { appointmentId, patientId } = req.body;
@@ -380,13 +416,13 @@ const getAppointmentByPatientId = async (req, res) => {
 
 const getAppointmentByDoctorId = async (req, res) => {
   try {
-    if (!req.body.doctorId) {
+    if (!req.params.doctorId) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("Please provide doctor id"));
     }
     const appointments = await Appointment.find({
-      doctorId: req.body.doctorId,
+      doctorId: req.params.doctorId,
     });
     if (!appointments) {
       return res
@@ -408,6 +444,7 @@ module.exports = {
   bookAppointment,
   cancelAppointment,
   addZoomLinkToAppointment,
+  assignDoctorToAppointment,
   completeAppointment,
   getAllAppointments,
   getAppointmentById,
