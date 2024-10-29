@@ -194,6 +194,11 @@ const addZoomLinkToAppointment = async (req, res) => {
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("please provide zoomLink"));
     }
+    if (!email) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("please provide patient's email"));
+    }
 
     // Find the appointment
     const appointment = await Appointment.findOne({
