@@ -65,7 +65,7 @@ const getAllPatients = async (req, res) => {
 
 const getAllDoctors = async (req, res) => {
   try {
-    let { search, page, limit } = req.query;
+    let { search, page, limit, filter } = req.query;
     if (page < 1 || limit < 0) {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -73,7 +73,13 @@ const getAllDoctors = async (req, res) => {
     }
     page = parseInt(page) || 1;
     limit = parseInt(limit) || 10;
-    const query = { role: "doctor" };
+    const query = { doctorApplicationStatus: "approved" };
+    if (
+      filter &&
+      (filter === "pending" || filter === "approved" || filter === "cancelled")
+    ) {
+      query.doctorApplicationStatus = filter;
+    }
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: "i" } },
