@@ -184,6 +184,17 @@ const addZoomLinkToAppointment = async (req, res) => {
   try {
     const { appointmentId, zoomLink, email } = req.body;
 
+    if (!appointmentId) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("please provide appointmentId"));
+    }
+    if (!zoomLink) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("please provide zoomLink"));
+    }
+
     // Find the appointment
     const appointment = await Appointment.findOne({
       _id: appointmentId,
@@ -200,20 +211,22 @@ const addZoomLinkToAppointment = async (req, res) => {
     appointment.patientEmail = email;
     await appointment.save();
     const dateTime = new Date(appointment.dateTime).toLocaleString();
-    const emailData = {
-      email: email,
-      subject: "Appointment zoom link",
-      html: ` <h2 style="color: #007BFF; text-align: center;">Zoom Link to your appointment</h2>
-              <h4>Hello there,</h4>
-              <p>The zoom link to your appointment is: <a href="${zoomLink}">${zoomLink}</a></p>
-              <p style="padding: 8px 0;"><strong >Appointment Date & Time: </strong> ${dateTime}</p>
-              <p style="color: #555;">Please be present 10 minutes prior to the scheduled appointment time.</p>
-              <p>Best regards,</p>
-              <p><strong>My Doctor Clinic</strong></p>
-            `,
-    };
+    if (email) {
+      const emailData = {
+        email: email,
+        subject: "Appointment zoom link",
+        html: ` <h2 style="color: #007BFF; text-align: center;">Zoom Link to your appointment</h2>
+                <h4>Hello there,</h4>
+                <p>The zoom link to your appointment is: <a href="${zoomLink}">${zoomLink}</a></p>
+                <p style="padding: 8px 0;"><strong >Appointment Date & Time: </strong> ${dateTime}</p>
+                <p style="color: #555;">Please be present 10 minutes prior to the scheduled appointment time.</p>
+                <p>Best regards,</p>
+                <p><strong>My Doctor Clinic</strong></p>
+              `,
+      };
 
-    emailWithNodemailerGmail(emailData);
+      emailWithNodemailerGmail(emailData);
+    }
 
     return res
       .status(HTTP_STATUS.OK)
