@@ -444,7 +444,8 @@ const getAppointmentByPatientId = async (req, res) => {
     })
       .sort({ createdAt: -1 }) // fetch in descending order;
       .skip((pageValue - 1) * limitValue)
-      .limit(limitValue);
+      .limit(limitValue)
+      .populate("doctorId");
     const total = await Appointment.countDocuments({ patientId: req.user._id });
     if (!appointments) {
       return res
