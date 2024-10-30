@@ -51,16 +51,13 @@ routes.get(
 
 routes.get(
   "/get-appointment-by-patientId",
-  // userValidator.create,
-  // authValidator.create,
   isAuthorizedUser,
   getAppointmentByPatientId
 );
 
 routes.get(
-  "/get-appointment-by-doctorId/:doctorId",
-  // userValidator.create,
-  // authValidator.create,
+  "/get-appointment-by-doctorId",
+  isAuthorizedUser,
   getAppointmentByDoctorId
 );
 

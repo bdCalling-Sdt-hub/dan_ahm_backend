@@ -417,13 +417,13 @@ const getAppointmentByPatientId = async (req, res) => {
 
 const getAppointmentByDoctorId = async (req, res) => {
   try {
-    if (!req.params.doctorId) {
+    if (!req.user._id) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
-        .send(failure("Please provide doctor id"));
+        .send(failure("please login first"));
     }
     const appointments = await Appointment.find({
-      doctorId: req.params.doctorId,
+      doctorId: req.user._id,
     });
     if (!appointments) {
       return res
