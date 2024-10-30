@@ -65,7 +65,7 @@ routes.get(
 );
 
 routes.patch(
-  "/cancel-appointment-by-id/:id",
+  "/cancel-appointment-by-id",
   // userValidator.create,
   // authValidator.create,
   isAuthorizedAdmin,
@@ -73,7 +73,7 @@ routes.patch(
 );
 
 routes.patch(
-  "/complete-appointment-by-id/:id",
+  "/complete-appointment-by-id",
   // userValidator.create,
   // authValidator.create,
   isAuthorizedAdmin,

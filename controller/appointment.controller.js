@@ -365,8 +365,9 @@ const getAppointmentById = async (req, res) => {
         .send(failure("Please provide appointment id"));
     }
     const appointment = await Appointment.findById(req.params.id).populate(
-      "notes prescription"
+      "notes prescription doctor patient services"
     );
+
     if (!appointment) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)

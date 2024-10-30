@@ -59,7 +59,27 @@ const appointmentSchema = new Schema(
     },
     paymentId: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+// Define a virtual field `services` to alias `serviceId`
+appointmentSchema.virtual("services", {
+  ref: "Service", // Model to populate
+  localField: "serviceId", // Field in Main schema
+  foreignField: "_id", // Field in Service schema
+  justOne: true, // Retrieve single object instead of array
+});
+appointmentSchema.virtual("doctor", {
+  ref: "User", // Model to populate
+  localField: "doctorId", // Field in Main schema
+  foreignField: "_id", // Field in Service schema
+  justOne: true, // Retrieve single object instead of array
+});
+appointmentSchema.virtual("patient", {
+  ref: "User", // Model to populate
+  localField: "patientId", // Field in Main schema
+  foreignField: "_id", // Field in Service schema
+  justOne: true, // Retrieve single object instead of array
+});
 
 module.exports = mongoose.model("Appointment", appointmentSchema);
