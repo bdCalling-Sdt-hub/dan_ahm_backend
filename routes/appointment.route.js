@@ -3,6 +3,7 @@ const routes = express();
 const {
   bookAppointment,
   addZoomLinkToAppointment,
+  addEmailForZoomLink,
   assignDoctorToAppointment,
   cancelAppointment,
   completeAppointment,
@@ -32,6 +33,14 @@ routes.post(
   // authValidator.create,
   isAuthorizedAdmin,
   addZoomLinkToAppointment
+);
+
+routes.post(
+  "/add-email-for-zoom-link",
+  // userValidator.create,
+  // authValidator.create,
+  isAuthorizedUser,
+  addEmailForZoomLink
 );
 
 routes.get(

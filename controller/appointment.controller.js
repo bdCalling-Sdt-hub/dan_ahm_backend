@@ -244,6 +244,40 @@ const addZoomLinkToAppointment = async (req, res) => {
   }
 };
 
+const addEmailForZoomLink = async (req, res) => {
+  try {
+    const { email, appointmentId } = req.body;
+    if (!email || !appointmentId) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("please provide patient's email and appointmentId"));
+    }
+
+    // Find the appointment
+    const appointment = await Appointment.findOne({
+      _id: appointmentId,
+    });
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+
+    // Add the email to the appointment
+    appointment.patientEmail = email;
+    await appointment.save();
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Email added successfully", { email }));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to add email"));
+  }
+};
+
 const assignDoctorToAppointment = async (req, res) => {
   try {
     const { appointmentId, doctorId } = req.body;
@@ -445,6 +479,7 @@ module.exports = {
   bookAppointment,
   cancelAppointment,
   addZoomLinkToAppointment,
+  addEmailForZoomLink,
   assignDoctorToAppointment,
   completeAppointment,
   getAllAppointments,
