@@ -431,17 +431,35 @@ const getAppointmentByPatientId = async (req, res) => {
     //     .status(HTTP_STATUS.NOT_FOUND)
     //     .send(failure("Please provide patient id"));
     // }
+    const { page, limit } = req.query;
+    if (page < 1 || limit < 0) {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(failure("Page and limit values must be at least 1"));
+    }
+    const pageValue = parseInt(page) || 1;
+    const limitValue = parseInt(limit) || 10;
     const appointments = await Appointment.find({
       patientId: req.user._id,
-    }).sort({ createdAt: -1 }); // fetch in descending order;
+    })
+      .sort({ createdAt: -1 }) // fetch in descending order;
+      .skip((pageValue - 1) * limitValue)
+      .limit(limitValue);
+    const total = await Appointment.countDocuments({ patientId: req.user._id });
     if (!appointments) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("Appointments not found"));
     }
-    return res
-      .status(HTTP_STATUS.OK)
-      .send(success("Appointments retrieved successfully", appointments));
+    return res.status(HTTP_STATUS.OK).send(
+      success("Appointments retrieved successfully", {
+        result: appointments,
+        page: pageValue,
+        limit: limitValue,
+        total,
+        totalPages: Math.ceil(total / limitValue),
+      })
+    );
   } catch (err) {
     console.error(err);
     return res
@@ -457,17 +475,35 @@ const getAppointmentByDoctorId = async (req, res) => {
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("please login first"));
     }
+    const { page, limit } = req.query;
+    if (page < 1 || limit < 0) {
+      return res
+        .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
+        .send(failure("Page and limit values must be at least 1"));
+    }
+    const pageValue = parseInt(page) || 1;
+    const limitValue = parseInt(limit) || 10;
     const appointments = await Appointment.find({
       doctorId: req.user._id,
-    }).sort({ createdAt: -1 }); // fetch in descending order;
+    })
+      .sort({ createdAt: -1 }) // fetch in descending order;
+      .skip((pageValue - 1) * limitValue)
+      .limit(limitValue);
+    const total = await Appointment.countDocuments({ doctorId: req.user._id });
     if (!appointments) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("Appointments not found"));
     }
-    return res
-      .status(HTTP_STATUS.OK)
-      .send(success("Appointments retrieved successfully", appointments));
+    return res.status(HTTP_STATUS.OK).send(
+      success("Appointments retrieved successfully", {
+        result: appointments,
+        page: pageValue,
+        limit: limitValue,
+        total,
+        totalPages: Math.ceil(total / limitValue),
+      })
+    );
   } catch (err) {
     console.error(err);
     return res
