@@ -362,6 +362,7 @@ const getAllAppointments = async (req, res) => {
     }
 
     const appointments = await Appointment.find(query)
+      .sort({ createdAt: -1 }) // fetch in descending order
       .skip((page - 1) * limit)
       .limit(limit)
       .populate("doctorId")
@@ -432,7 +433,7 @@ const getAppointmentByPatientId = async (req, res) => {
     // }
     const appointments = await Appointment.find({
       patientId: req.user._id,
-    });
+    }).sort({ createdAt: -1 }); // fetch in descending order;
     if (!appointments) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
@@ -458,7 +459,7 @@ const getAppointmentByDoctorId = async (req, res) => {
     }
     const appointments = await Appointment.find({
       doctorId: req.user._id,
-    });
+    }).sort({ createdAt: -1 }); // fetch in descending order;
     if (!appointments) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
