@@ -3,9 +3,7 @@ const { validationResult } = require("express-validator");
 const { failure, success } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
 const Review = require("../model/review.model");
-const ProductModel = require("../model/Product");
 const UserModel = require("../model/user.model");
-// const UserModel = require("../model/Auth");
 const User = require("../model/user.model");
 const addReviewToDoctor = async (req, res) => {
   try {
