@@ -1,10 +1,10 @@
-const User = require("../model/User");
+const User = require("../model/user.model");
 const HTTP_STATUS = require("../constants/statusCodes");
 
 // Controller to get notifications by userId
 const getNotificationsByUserId = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
 
     if (!userId) {
       return res
