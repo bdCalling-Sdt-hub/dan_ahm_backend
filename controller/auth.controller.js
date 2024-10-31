@@ -513,7 +513,9 @@ const login = async (req, res) => {
     }
 
     // fetching the fields
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select(
+      "+password -__v -isLocked -createdAt -updatedAt -doctorApplicationStatus -isDoctor -notifications -consultationHistory -consultationUpcoming -services -reviews"
+    );
 
     // object conversion
     const userObj = user.toObject();
