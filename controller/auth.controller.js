@@ -504,7 +504,8 @@ const cancelDoctor = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+    console.log(email);
+    console.log(password);
     // check if email & pass exist
     if (!email || !password) {
       return res
@@ -517,15 +518,20 @@ const login = async (req, res) => {
       "+password -__v -isLocked -createdAt -updatedAt -doctorApplicationStatus -isDoctor -notifications -consultationHistory -consultationUpcoming -services -reviews"
     );
 
-    // object conversion
-    const userObj = user.toObject();
-
+    if (!user) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("not registered. please sign up"));
+    }
     // when the user doesnt exist or pass dont match
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res
         .status(HTTP_STATUS.BAD_REQUEST)
         .send(failure("wrong email or password"));
     }
+
+    // object conversion
+    const userObj = user.toObject();
 
     // token
     const token = jwt.sign(user.toObject(), process.env.JWT_SECRET, {
@@ -545,6 +551,7 @@ const login = async (req, res) => {
       .status(HTTP_STATUS.OK)
       .send(success("Logged in successfully", { user, token }));
   } catch (err) {
+    console.log(err);
     return res
       .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
       .send(failure("Internal server error"));
