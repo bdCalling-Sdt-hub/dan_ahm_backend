@@ -504,8 +504,6 @@ const cancelDoctor = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(email);
-    console.log(password);
     // check if email & pass exist
     if (!email || !password) {
       return res
