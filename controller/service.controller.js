@@ -91,6 +91,7 @@ const updateServiceById = async (req, res) => {
 
 const getAllServices = async (req, res) => {
   try {
+    const { hasDateTime } = req.query;
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
 
@@ -99,14 +100,24 @@ const getAllServices = async (req, res) => {
 
     const skip = (page - 1) * limit;
 
-    const services = await Service.find({ isDeleted: false })
+    let query = { isDeleted: false };
+
+    console.log(typeof hasDateTime);
+
+    if (hasDateTime === "true") {
+      query.dateTimes = { $ne: [] };
+    } else if (hasDateTime === "false") {
+      query.dateTimes = { $eq: [] };
+    }
+
+    const services = await Service.find(query)
       .populate({
         path: "doctor",
         select: "-notifications -nhsNumber -balance -__v",
       })
       .skip(skip)
       .limit(limit);
-    const count = await Service.countDocuments({ isDeleted: false });
+    const count = await Service.countDocuments(query);
 
     if (!services) {
       return res
