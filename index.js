@@ -18,6 +18,7 @@ const faqRouter = require("./routes/faq.route");
 const prescriptionRouter = require("./routes/prescription.route");
 const tipRouter = require("./routes/tip.route");
 const notificationRouter = require("./routes/notification.route");
+const helpRouter = require("./routes/help.route");
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/terms-of-service", termsOfServiceRouter);
 app.use("/faq", faqRouter);
 app.use("/tip", tipRouter);
 app.use("/notification", notificationRouter);
+app.use("/help", helpRouter);
 
 // Route to handle all other invalid requests
 app.use((req, res) => {
