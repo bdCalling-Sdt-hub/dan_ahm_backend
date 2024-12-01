@@ -116,7 +116,8 @@ const getAllServices = async (req, res) => {
         select: "-notifications -nhsNumber -balance -__v",
       })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({ createdAt: -1 });
     const count = await Service.countDocuments(query);
 
     if (!services) {

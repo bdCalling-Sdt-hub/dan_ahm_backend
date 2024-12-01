@@ -141,7 +141,9 @@ const addReviewToWebsite = async (req, res) => {
 
 const getAllWebsiteReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({});
+    const reviews = await Review.find({})
+      .populate("userId")
+      .sort({ createdAt: -1 });
 
     if (reviews) {
       return res
