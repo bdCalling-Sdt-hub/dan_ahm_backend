@@ -334,6 +334,23 @@ const completeAppointment = async (req, res) => {
     appointment.status = "completed";
     await appointment.save();
 
+    // Remove the appointment from the patient's upcoming appointments and put it into the consultation history
+    const patient = await User.findById(patientId);
+
+    if (!patient) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(
+          failure("Appointment successfully completed but Patient not found")
+        );
+    }
+
+    patient.consultationUpcoming = patient.consultationUpcoming.filter(
+      (id) => id.toString() !== appointment._id.toString()
+    );
+    patient.consultationHistory.push(appointment._id);
+    await patient.save();
+
     return res
       .status(HTTP_STATUS.OK)
       .send(success("Appointment successfully completed", { appointment }));
