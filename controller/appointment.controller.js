@@ -495,7 +495,7 @@ const getAppointmentByDoctorId = async (req, res) => {
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("please login first"));
     }
-    const { page, limit, status } = req.query;
+    const { page, limit, status, search } = req.query;
     if (page < 1 || limit < 0) {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -506,6 +506,13 @@ const getAppointmentByDoctorId = async (req, res) => {
     const query = { doctorId: req.user._id };
     if (status && ["upcoming", "completed", "cancelled"].includes(status)) {
       query.status = status;
+    }
+    if (search) {
+      query.$or = [
+        { patientEmail: { $regex: search, $options: "i" } },
+        { "patient.name": { $regex: search, $options: "i" } },
+        { "patient.email": { $regex: search, $options: "i" } },
+      ];
     }
     const appointments = await Appointment.find(query)
       .sort({ createdAt: -1 }) // fetch in descending order;
