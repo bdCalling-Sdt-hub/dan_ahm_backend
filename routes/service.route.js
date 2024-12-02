@@ -22,77 +22,57 @@ const { get } = require("mongoose");
 
 routes.post(
   "/add-service",
-  // userValidator.create,
-  // authValidator.create,
+
   isAuthorizedAdmin,
   addService
 );
 
-routes.get(
-  "/get-all-services",
-  // userValidator.create,
-  // authValidator.create,
-  getAllServices
-);
+routes.get("/get-all-services", getAllServices);
 
 routes.get(
   "/get-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
+
   getServiceById
 );
 
 routes.get(
   "/get-service-by-doctorId/:id",
-  // userValidator.create,
-  // authValidator.create,
+
   getServiceByDoctorId
 );
 
-routes.put(
-  "/update-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
-  isAuthorizedAdmin,
-  updateServiceById
-);
+routes.put("/update-service-by-id/:id", isAuthorizedAdmin, updateServiceById);
 
 routes.delete(
   "/delete-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
   isAuthorizedAdmin,
   deleteServiceById
 );
 
 routes.patch(
   "/disable-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
   isAuthorizedAdmin,
   disableServiceById
 );
 
 routes.patch(
   "/enable-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
+
   isAuthorizedAdmin,
   enableServiceById
 );
 
 routes.patch(
   "/approve-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
+
   isAuthorizedAdmin,
   approveServiceById
 );
 
 routes.patch(
   "/cancel-service-by-id/:id",
-  // userValidator.create,
-  // authValidator.create,
+
+  isAuthorizedAdmin,
   cancelServiceById
 );
 

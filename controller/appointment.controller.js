@@ -334,6 +334,23 @@ const completeAppointment = async (req, res) => {
     appointment.status = "completed";
     await appointment.save();
 
+    // Remove the appointment from the patient's upcoming appointments and put it into the consultation history
+    const patient = await User.findById(patientId);
+
+    if (!patient) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(
+          failure("Appointment successfully completed but Patient not found")
+        );
+    }
+
+    patient.consultationUpcoming = patient.consultationUpcoming.filter(
+      (id) => id.toString() !== appointment._id.toString()
+    );
+    patient.consultationHistory.push(appointment._id);
+    await patient.save();
+
     return res
       .status(HTTP_STATUS.OK)
       .send(success("Appointment successfully completed", { appointment }));
@@ -431,7 +448,7 @@ const getAppointmentByPatientId = async (req, res) => {
     //     .status(HTTP_STATUS.NOT_FOUND)
     //     .send(failure("Please provide patient id"));
     // }
-    const { page, limit } = req.query;
+    const { page, limit, status } = req.query;
     if (page < 1 || limit < 0) {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -439,14 +456,16 @@ const getAppointmentByPatientId = async (req, res) => {
     }
     const pageValue = parseInt(page) || 1;
     const limitValue = parseInt(limit) || 10;
-    const appointments = await Appointment.find({
-      patientId: req.user._id,
-    })
+    const query = { patientId: req.user._id };
+    if (status && ["upcoming", "completed", "cancelled"].includes(status)) {
+      query.status = status;
+    }
+    const appointments = await Appointment.find(query)
       .sort({ createdAt: -1 }) // fetch in descending order;
       .skip((pageValue - 1) * limitValue)
       .limit(limitValue)
       .populate("doctorId");
-    const total = await Appointment.countDocuments({ patientId: req.user._id });
+    const total = await Appointment.countDocuments(query);
     if (!appointments) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)

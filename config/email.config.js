@@ -52,4 +52,7 @@ const emailWithNodemailerGmail = async (emailData) => {
   }
 };
 
-module.exports = { emailWithNodemailer, emailWithNodemailerGmail };
+module.exports = {
+  emailWithNodemailer,
+  emailWithNodemailerGmail,
+};
