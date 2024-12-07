@@ -1,9 +1,10 @@
 const Prescription = require("../model/prescription.model");
+const PrescriptionTemplate = require("../model/prescriptionTemplate.model");
 const Appointment = require("../model/appointment.model");
 const { success, failure } = require("../utilities/common");
 const HTTP_STATUS = require("../constants/statusCodes");
 
-// Add a new note to an appointment
+// Add a new prescription to an appointment
 const addPrescription = async (req, res) => {
   try {
     const { appointmentId, title, content } = req.body;
@@ -51,7 +52,7 @@ const addPrescription = async (req, res) => {
   }
 };
 
-// Get notes by appointment ID
+// Get prescription by appointment ID
 const getPrescriptionByAppointment = async (req, res) => {
   try {
     const { appointmentId } = req.params;
@@ -79,7 +80,7 @@ const getPrescriptionByAppointment = async (req, res) => {
   }
 };
 
-// Edit a note
+// Edit a prescription
 const editPrescriptionByPrescriptionId = async (req, res) => {
   try {
     const { prescriptionId } = req.params;
@@ -122,7 +123,35 @@ const editPrescriptionByPrescriptionId = async (req, res) => {
   }
 };
 
-// Delete a note
+const downloadPrescription = async (req, res) => {
+  try {
+    const { prescriptionId } = req.params;
+
+    // Find the note
+    const prescription = await Prescription.findById(prescriptionId);
+
+    if (!prescription) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("prescription not found"));
+    }
+
+    // Increase the download count
+    prescription.downloadCount += 1;
+    await prescription.save();
+
+    // // Download the note file
+    // const file = prescription.file;
+    // res.download(file.path, file.originalname);
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Internal server error"));
+  }
+};
+
+// Delete a prescription
 const deletePrescription = async (req, res) => {
   try {
     const { prescriptionId } = req.params;
@@ -159,9 +188,84 @@ const deletePrescription = async (req, res) => {
   }
 };
 
+const addPrescriptionTemplate = async (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content) {
+      return res
+        .status(HTTP_STATUS.BAD_REQUEST)
+        .send(failure("Content is required for About Us."));
+    }
+
+    let prescriptionTemplate = await PrescriptionTemplate.findOne();
+    if (!prescriptionTemplate) {
+      prescriptionTemplate = await PrescriptionTemplate.create({
+        content,
+      });
+
+      await prescriptionTemplate.save();
+
+      return res
+        .status(HTTP_STATUS.OK)
+        .send(
+          success(
+            "prescription template added successfully",
+            prescriptionTemplate
+          )
+        );
+    }
+    prescriptionTemplate.content = content;
+    await prescriptionTemplate.save();
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(
+        success(
+          "prescription template updated successfully",
+          prescriptionTemplate
+        )
+      );
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Internal server error"));
+  }
+};
+
+const getPrescriptionTemplate = async (req, res) => {
+  try {
+    const prescriptionTemplate = await PrescriptionTemplate.findOne();
+
+    if (!prescriptionTemplate) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("No prescription template found"));
+    }
+
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(
+        success(
+          "prescription template retrieved successfully",
+          prescriptionTemplate
+        )
+      );
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Internal server error"));
+  }
+};
+
 module.exports = {
   addPrescription,
   getPrescriptionByAppointment,
   editPrescriptionByPrescriptionId,
   deletePrescription,
+  downloadPrescription,
+  addPrescriptionTemplate,
+  getPrescriptionTemplate,
 };
