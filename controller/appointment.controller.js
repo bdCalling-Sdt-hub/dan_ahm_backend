@@ -9,8 +9,22 @@ const HTTP_STATUS = require("../constants/statusCodes");
 // Book an appointment
 const bookAppointment = async (req, res) => {
   try {
-    const { serviceId, dateTime, dayOfWeek, type, description, nhsNumber } =
-      req.body;
+    const {
+      serviceId,
+      dateTime,
+      dayOfWeek,
+      type,
+      description,
+      nhsNumber,
+      name,
+      address,
+      dateOfBirth,
+      currentNHSGPDetails,
+      nameOfDoctor,
+      surgeryAddress,
+      surgeryTelephoneNumber,
+      surgeryEmail,
+    } = req.body;
 
     if (!req.user) {
       return res
@@ -81,6 +95,17 @@ const bookAppointment = async (req, res) => {
     });
 
     appointment.nhsNumber = nhsNumber || patient.nhsNumber;
+    patient.name = name || patient.name;
+    patient.address = address || patient.address;
+    patient.dateOfBirth = dateOfBirth || patient.dateOfBirth;
+    patient.currentNHSGPDetails =
+      currentNHSGPDetails || patient.currentNHSGPDetails;
+    patient.nameOfDoctor = nameOfDoctor || patient.nameOfDoctor;
+    patient.surgeryAddress = surgeryAddress || patient.surgeryAddress;
+    patient.surgeryTelephoneNumber =
+      surgeryTelephoneNumber || patient.surgeryTelephoneNumber;
+    patient.surgeryEmail = surgeryEmail || patient.surgeryEmail;
+    await patient.save();
 
     // if (appointment) {
     //   // Remove the selected dateTime from the service's available times
