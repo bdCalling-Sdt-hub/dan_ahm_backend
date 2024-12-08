@@ -26,6 +26,8 @@ const bookAppointment = async (req, res) => {
       surgeryEmail,
     } = req.body;
 
+    console.log("body", req.body);
+
     if (!req.user) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)

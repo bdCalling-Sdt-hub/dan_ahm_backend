@@ -222,6 +222,7 @@ const updateUserById = async (req, res) => {
 const updateProfileByUser = async (req, res) => {
   try {
     const { name, phone, image } = req.body;
+    console.log("body", req.body);
     const user = await UserModel.findById(req.user._id);
     if (!user) {
       return res
@@ -241,8 +242,20 @@ const updateProfileByUser = async (req, res) => {
         user.image = imageFileName;
       }
     }
-    user.name = name || user.name;
-    user.phone = phone || user.phone;
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.user._id,
+      req.body,
+      // Returns the updated document
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send({ message: "User not found" });
+    }
+    console.log(updatedUser);
+    updatedUser.__v = undefined;
     await user.save();
     return res
       .status(HTTP_STATUS.ACCEPTED)
