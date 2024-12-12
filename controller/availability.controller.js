@@ -35,6 +35,54 @@ const addAvailability = async (req, res) => {
   }
 };
 
+const getAvailabilityByDoctorId = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide doctor id"));
+    }
+    const availability = await Availability.find({ doctor: req.params.id });
+    if (!availability) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("availability not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Successfully received availability", availability));
+  } catch (error) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Error fetching availability", error.message));
+  }
+};
+
+const deleteAvailabilityById = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide availability id"));
+    }
+    const deletedAvailability = await Availability.findByIdAndDelete(
+      req.params.id
+    );
+    if (!deletedAvailability) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Availability not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Successfully deleted availability", deletedAvailability));
+  } catch (error) {
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Error deleting availability", error.message));
+  }
+};
+
 const updateServiceById = async (req, res) => {
   try {
     if (!req.params.id) {
@@ -139,33 +187,11 @@ const getServiceById = async (req, res) => {
   }
 };
 
-const getAvailabilityByDoctorId = async (req, res) => {
-  try {
-    if (!req.params.id) {
-      return res
-        .status(HTTP_STATUS.NOT_FOUND)
-        .send(failure("Please provide doctor id"));
-    }
-    const availability = await Availability.find({ doctor: req.params.id });
-    if (!availability) {
-      return res
-        .status(HTTP_STATUS.NOT_FOUND)
-        .send(failure("availability not found"));
-    }
-    return res
-      .status(HTTP_STATUS.OK)
-      .send(success("Successfully received availability", availability));
-  } catch (error) {
-    return res
-      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
-      .send(failure("Error fetching availability", error.message));
-  }
-};
-
 module.exports = {
   addAvailability,
+  getAvailabilityByDoctorId,
+  deleteAvailabilityById,
   getAllServices,
   getServiceById,
-  getAvailabilityByDoctorId,
   updateServiceById,
 };

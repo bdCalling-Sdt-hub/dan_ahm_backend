@@ -2,9 +2,10 @@ const express = require("express");
 const routes = express();
 const {
   addAvailability,
+  getAvailabilityByDoctorId,
+  deleteAvailabilityById,
   getAllServices,
   getServiceById,
-  getAvailabilityByDoctorId,
   updateServiceById,
 } = require("../controller/availability.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
@@ -31,5 +32,7 @@ routes.get(
 );
 
 routes.put("/update-service-by-id/:id", isAuthorizedAdmin, updateServiceById);
+
+routes.delete("/delete-availability-by-id/:id", deleteAvailabilityById);
 
 module.exports = routes;
