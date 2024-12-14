@@ -112,9 +112,10 @@ const updateServiceById = async (req, res) => {
   }
 };
 
-const getAllServices = async (req, res) => {
+const getAllAvailabilities = async (req, res) => {
   try {
-    const { hasDateTime } = req.query;
+    const { dateTime } = req.query;
+
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 10;
 
@@ -125,15 +126,23 @@ const getAllServices = async (req, res) => {
 
     let query = { isDeleted: false };
 
-    console.log(typeof hasDateTime);
-
-    if (hasDateTime === "true") {
-      query.dateTimes = { $ne: [] };
-    } else if (hasDateTime === "false") {
-      query.dateTimes = { $eq: [] };
+    if (dateTime && !isNaN(new Date(dateTime).getTime())) {
+      console.log("dateTime", dateTime);
+      query.$and = [
+        {
+          "availableDate.startDateTime": {
+            $lte: new Date(dateTime).toISOString(),
+          },
+        },
+        {
+          "availableDate.endDateTime": {
+            $gte: new Date(dateTime).toISOString(),
+          },
+        },
+      ];
     }
 
-    const services = await Availability.find(query)
+    const availableDoctors = await Availability.find(query)
       .populate({
         path: "doctor",
         select: "-notifications -nhsNumber -balance -__v",
@@ -143,14 +152,14 @@ const getAllServices = async (req, res) => {
       .sort({ createdAt: -1 });
     const count = await Availability.countDocuments(query);
 
-    if (!services) {
+    if (!availableDoctors) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("Services not found"));
     }
     return res.status(HTTP_STATUS.OK).send(
       success("Successfully received all services", {
-        result: services,
+        result: availableDoctors,
         count,
         page,
         limit,
@@ -163,7 +172,6 @@ const getAllServices = async (req, res) => {
       .send(failure("Error fetching services", error.message));
   }
 };
-
 const getServiceById = async (req, res) => {
   try {
     if (!req.params.id) {
@@ -191,7 +199,7 @@ module.exports = {
   addAvailability,
   getAvailabilityByDoctorId,
   deleteAvailabilityById,
-  getAllServices,
+  getAllAvailabilities,
   getServiceById,
   updateServiceById,
 };

@@ -4,7 +4,7 @@ const {
   addAvailability,
   getAvailabilityByDoctorId,
   deleteAvailabilityById,
-  getAllServices,
+  getAllAvailabilities,
   getServiceById,
   updateServiceById,
 } = require("../controller/availability.controller");
@@ -17,7 +17,7 @@ const {
 
 routes.post("/add-availability", addAvailability);
 
-routes.get("/get-all-services", getAllServices);
+routes.get("/get-all-availabilities", getAllAvailabilities);
 
 routes.get(
   "/get-service-by-id/:id",
