@@ -25,6 +25,7 @@ const getAllUsers = async (req, res) => {
 
 const getAllPatients = async (req, res) => {
   let { search, page, limit } = req.query;
+
   if (page < 1 || limit < 0) {
     return res
       .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -33,11 +34,20 @@ const getAllPatients = async (req, res) => {
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   const query = { role: "patient" };
+
   if (search) {
-    query.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
-    ];
+    if (isNaN(Date.parse(search))) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { nhsNumber: { $regex: search, $options: "i" } },
+        { address: { $regex: search, $options: "i" } },
+      ];
+    } else {
+      const date = new Date(search);
+      const correctedDate = new Date(date.getTime() + 1000 * 60 * 60 * 24);
+      query.dateOfBirth = correctedDate.toISOString().split("T")[0];
+    }
   }
   try {
     const users = await UserModel.find(query)
