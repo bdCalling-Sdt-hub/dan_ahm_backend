@@ -26,6 +26,9 @@ const getAllUsers = async (req, res) => {
 const getAllPatients = async (req, res) => {
   let { search, page, limit } = req.query;
 
+  console.log("search", search);
+  console.log("page", page);
+
   if (page < 1 || limit < 0) {
     return res
       .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -50,11 +53,18 @@ const getAllPatients = async (req, res) => {
     }
   }
   try {
+    const total = await UserModel.countDocuments(query);
+    const totalPages = Math.ceil(total / limit);
+
+    // Reset page to 1 if it exceeds total pages
+    if (page > totalPages && totalPages > 0) {
+      page = 1;
+    }
     const users = await UserModel.find(query)
       .select("-__v")
       .skip((page - 1) * limit)
       .limit(limit * 1);
-    const total = await UserModel.countDocuments(query);
+
     if (users.length) {
       return res.status(HTTP_STATUS.OK).send(
         success("Successfully received all patients", {
@@ -62,11 +72,11 @@ const getAllPatients = async (req, res) => {
           page,
           limit,
           total,
-          totalPages: Math.ceil(total / limit),
+          // totalPages: Math.ceil(total / limit),
+          totalPages,
         })
       );
     }
-
     return res.status(HTTP_STATUS.OK).send(failure("User not found"));
   } catch (error) {
     return res.status(400).send(`internal server error`);
