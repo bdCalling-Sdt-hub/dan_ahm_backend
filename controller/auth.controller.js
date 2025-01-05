@@ -72,6 +72,7 @@ const signup = async (req, res) => {
       password: hashedPassword,
       emailVerifyCode,
       nhsNumber: req.body.nhsNumber || Date.now(),
+      uniqueId: req.body.uniqueId || Date.now(),
       phone: req.body.phone,
       gender: req.body.gender,
       balance: req.body.balance ? req.body.balance : 0,
@@ -212,6 +213,7 @@ const signupAsDoctor = async (req, res) => {
       phone: req.body.phone,
       gender: req.body.gender,
       nhsNumber: Date.now(),
+      uniqueId: Date.now(),
     });
 
     if (!newUser) {

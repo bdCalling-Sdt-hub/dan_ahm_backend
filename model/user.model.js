@@ -74,7 +74,10 @@ const userSchema = new mongoose.Schema(
     },
     nhsNumber: {
       type: String,
-      required: false,
+      // unique: true,
+    },
+    uniqueId: {
+      type: String,
       // unique: true,
     },
     consultationHistory: [
