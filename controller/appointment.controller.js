@@ -85,6 +85,16 @@ const bookAppointment = async (req, res) => {
         .send(failure("This time slot is already booked"));
     }
 
+    // Handle document uploads
+    const documentPaths = [];
+    if (req.files && req.files["pdfFiles"]) {
+      req.files.pdfFiles.forEach((file) => {
+        documentPaths.push(file.path); // Save file paths
+      });
+    }
+
+    console.log("documentPaths", documentPaths);
+
     // Book the appointment
     const appointment = new Appointment({
       serviceId,
@@ -94,6 +104,7 @@ const bookAppointment = async (req, res) => {
       description: description || "no description provided",
       dayOfWeek,
       type,
+      documents: documentPaths, // Save uploaded document paths
     });
 
     appointment.nhsNumber = nhsNumber || patient.nhsNumber;

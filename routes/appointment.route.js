@@ -17,12 +17,14 @@ const {
   isAuthorizedUser,
   isAuthorizedAdmin,
 } = require("../middleware/authValidationJWT");
+const fileUpload = require("../middleware/fileUpload");
 // const { authValidator } = require("../middleware/authValidation");
 
 routes.post(
   "/book-service",
   // userValidator.create,
   // authValidator.create,
+  fileUpload(),
   isAuthorizedUser,
   bookAppointment
 );
