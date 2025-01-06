@@ -11,6 +11,7 @@ const {
   getAppointmentById,
   getAppointmentByPatientId,
   getAppointmentByDoctorId,
+  getAllDocumentsByAppointmentId,
 } = require("../controller/appointment.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const {
@@ -70,6 +71,12 @@ routes.get(
   "/get-appointment-by-doctorId",
   isAuthorizedUser,
   getAppointmentByDoctorId
+);
+
+routes.get(
+  "/get-all-documents-by-appointmentId/:id",
+
+  getAllDocumentsByAppointmentId
 );
 
 routes.patch(

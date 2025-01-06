@@ -580,6 +580,33 @@ const getAppointmentByDoctorId = async (req, res) => {
   }
 };
 
+const getAllDocumentsByAppointmentId = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const appointment = await Appointment.findById(req.params.id).populate(
+      "documents"
+    );
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Documents retrieved successfully", appointment.documents));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to retrieve documents"));
+  }
+};
+
 module.exports = {
   bookAppointment,
   cancelAppointment,
@@ -591,4 +618,5 @@ module.exports = {
   getAppointmentById,
   getAppointmentByPatientId,
   getAppointmentByDoctorId,
+  getAllDocumentsByAppointmentId,
 };
