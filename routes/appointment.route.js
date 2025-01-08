@@ -13,6 +13,7 @@ const {
   getAppointmentByDoctorId,
   getAllDocumentsByAppointmentId,
   deleteADocumentByAppointmentId,
+  addDocumentToAppointment,
 } = require("../controller/appointment.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const {
@@ -107,6 +108,12 @@ routes.patch(
 routes.delete(
   "/delete-a-document-by-appointmentId/:id",
   deleteADocumentByAppointmentId
+);
+
+routes.post(
+  "/add-document-to-appointment/:id",
+  fileUpload(),
+  addDocumentToAppointment
 );
 
 module.exports = routes;

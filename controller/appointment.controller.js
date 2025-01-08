@@ -651,6 +651,43 @@ const deleteADocumentByAppointmentId = async (req, res) => {
   }
 };
 
+const addDocumentToAppointment = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentPaths = [];
+    if (req.files && req.files["pdfFiles"]) {
+      req.files.pdfFiles.forEach((file) => {
+        documentPaths.push(file.path); // Save file paths
+      });
+    }
+    console.log("documentPaths", documentPaths);
+    appointment.documents.push(...documentPaths);
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document added successfully", {
+        documents: appointment.documents,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to add document"));
+  }
+};
+
 module.exports = {
   bookAppointment,
   cancelAppointment,
@@ -664,4 +701,5 @@ module.exports = {
   getAppointmentByDoctorId,
   getAllDocumentsByAppointmentId,
   deleteADocumentByAppointmentId,
+  addDocumentToAppointment,
 };
