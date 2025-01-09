@@ -606,6 +606,35 @@ const getAllDocumentsByAppointmentId = async (req, res) => {
       .send(failure("Failed to retrieve documents"));
   }
 };
+const getAllDocumentsByAppointmentIdByDoctor = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(
+        success(
+          "Documents retrieved successfully",
+          appointment.documentsByDoctor
+        )
+      );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to retrieve documents"));
+  }
+};
 
 const deleteADocumentByAppointmentId = async (req, res) => {
   try {
@@ -688,6 +717,43 @@ const addDocumentToAppointment = async (req, res) => {
   }
 };
 
+const addDocumentToAppointmentByDoctor = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentPaths = [];
+    if (req.files && req.files["pdfFiles"]) {
+      req.files.pdfFiles.forEach((file) => {
+        documentPaths.push(file.path); // Save file paths
+      });
+    }
+    console.log("documentPaths", documentPaths);
+    appointment.documentsByDoctor.push(...documentPaths);
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document added successfully", {
+        documentsByDoctor: appointment.documentsByDoctor,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to add document"));
+  }
+};
+
 module.exports = {
   bookAppointment,
   cancelAppointment,
@@ -702,4 +768,6 @@ module.exports = {
   getAllDocumentsByAppointmentId,
   deleteADocumentByAppointmentId,
   addDocumentToAppointment,
+  addDocumentToAppointmentByDoctor,
+  getAllDocumentsByAppointmentIdByDoctor,
 };

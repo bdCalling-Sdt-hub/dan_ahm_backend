@@ -14,6 +14,8 @@ const {
   getAllDocumentsByAppointmentId,
   deleteADocumentByAppointmentId,
   addDocumentToAppointment,
+  addDocumentToAppointmentByDoctor,
+  getAllDocumentsByAppointmentIdByDoctor,
 } = require("../controller/appointment.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const {
@@ -81,6 +83,12 @@ routes.get(
   getAllDocumentsByAppointmentId
 );
 
+routes.get(
+  "/get-all-documents-by-appointmentId-by-doctor/:id",
+
+  getAllDocumentsByAppointmentIdByDoctor
+);
+
 routes.patch(
   "/cancel-appointment-by-id",
   // userValidator.create,
@@ -114,6 +122,12 @@ routes.post(
   "/add-document-to-appointment/:id",
   fileUpload(),
   addDocumentToAppointment
+);
+
+routes.post(
+  "/add-document-to-appointment-by-doctor/:id",
+  fileUpload(),
+  addDocumentToAppointmentByDoctor
 );
 
 module.exports = routes;

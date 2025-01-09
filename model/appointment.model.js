@@ -61,7 +61,11 @@ const appointmentSchema = new Schema(
     documents: [
       {
         type: String, // Stores file paths or URLs of the uploaded PDFs
-        required: false,
+      },
+    ],
+    documentsByDoctor: [
+      {
+        type: String, // Stores file paths or URLs of the uploaded PDFs
       },
     ],
   },
