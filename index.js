@@ -20,6 +20,7 @@ const tipRouter = require("./routes/tip.route");
 const notificationRouter = require("./routes/notification.route");
 const helpRouter = require("./routes/help.route");
 const aboutUsRouter = require("./routes/aboutUs.route");
+const availabilityRouter = require("./routes/availability.route");
 
 const app = express();
 
@@ -67,6 +68,7 @@ app.use("/tip", tipRouter);
 app.use("/notification", notificationRouter);
 app.use("/help", helpRouter);
 app.use("/about-us", aboutUsRouter);
+app.use("/availability", availabilityRouter);
 
 // Route to handle all other invalid requests
 app.use((req, res) => {

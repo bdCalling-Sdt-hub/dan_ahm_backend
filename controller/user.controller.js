@@ -25,6 +25,10 @@ const getAllUsers = async (req, res) => {
 
 const getAllPatients = async (req, res) => {
   let { search, page, limit } = req.query;
+
+  console.log("search", search);
+  console.log("page", page);
+
   if (page < 1 || limit < 0) {
     return res
       .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -33,18 +37,34 @@ const getAllPatients = async (req, res) => {
   page = parseInt(page) || 1;
   limit = parseInt(limit) || 10;
   const query = { role: "patient" };
+
   if (search) {
-    query.$or = [
-      { name: { $regex: search, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
-    ];
+    if (isNaN(Date.parse(search))) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+        { nhsNumber: { $regex: search, $options: "i" } },
+        { address: { $regex: search, $options: "i" } },
+      ];
+    } else {
+      const date = new Date(search);
+      const correctedDate = new Date(date.getTime() + 1000 * 60 * 60 * 24);
+      query.dateOfBirth = correctedDate.toISOString().split("T")[0];
+    }
   }
   try {
+    const total = await UserModel.countDocuments(query);
+    const totalPages = Math.ceil(total / limit);
+
+    // Reset page to 1 if it exceeds total pages
+    if (page > totalPages && totalPages > 0) {
+      page = 1;
+    }
     const users = await UserModel.find(query)
       .select("-__v")
       .skip((page - 1) * limit)
       .limit(limit * 1);
-    const total = await UserModel.countDocuments(query);
+
     if (users.length) {
       return res.status(HTTP_STATUS.OK).send(
         success("Successfully received all patients", {
@@ -52,11 +72,11 @@ const getAllPatients = async (req, res) => {
           page,
           limit,
           total,
-          totalPages: Math.ceil(total / limit),
+          // totalPages: Math.ceil(total / limit),
+          totalPages,
         })
       );
     }
-
     return res.status(HTTP_STATUS.OK).send(failure("User not found"));
   } catch (error) {
     return res.status(400).send(`internal server error`);
@@ -222,6 +242,7 @@ const updateUserById = async (req, res) => {
 const updateProfileByUser = async (req, res) => {
   try {
     const { name, phone, image } = req.body;
+    console.log("body", req.body);
     const user = await UserModel.findById(req.user._id);
     if (!user) {
       return res
@@ -241,8 +262,20 @@ const updateProfileByUser = async (req, res) => {
         user.image = imageFileName;
       }
     }
-    user.name = name || user.name;
-    user.phone = phone || user.phone;
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      req.user._id,
+      req.body,
+      // Returns the updated document
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send({ message: "User not found" });
+    }
+    console.log(updatedUser);
+    updatedUser.__v = undefined;
     await user.save();
     return res
       .status(HTTP_STATUS.ACCEPTED)

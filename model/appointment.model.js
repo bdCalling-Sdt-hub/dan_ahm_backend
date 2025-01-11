@@ -29,7 +29,7 @@ const appointmentSchema = new Schema(
     },
     dayOfWeek: {
       type: String,
-      required: true,
+      // required: true,
     },
     status: {
       type: String,
@@ -58,6 +58,16 @@ const appointmentSchema = new Schema(
       default: "pending",
     },
     paymentId: { type: String },
+    documents: [
+      {
+        type: String, // Stores file paths or URLs of the uploaded PDFs
+      },
+    ],
+    documentsByDoctor: [
+      {
+        type: String, // Stores file paths or URLs of the uploaded PDFs
+      },
+    ],
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

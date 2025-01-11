@@ -11,18 +11,26 @@ const {
   getAppointmentById,
   getAppointmentByPatientId,
   getAppointmentByDoctorId,
+  getAllDocumentsByAppointmentId,
+  deleteADocumentByAppointmentId,
+  addDocumentToAppointment,
+  addDocumentToAppointmentByDoctor,
+  getAllDocumentsByAppointmentIdByDoctor,
+  deleteADocumentByAppointmentIdByDoctor,
 } = require("../controller/appointment.controller");
 const { userValidator, authValidator } = require("../middleware/validation");
 const {
   isAuthorizedUser,
   isAuthorizedAdmin,
 } = require("../middleware/authValidationJWT");
+const fileUpload = require("../middleware/fileUpload");
 // const { authValidator } = require("../middleware/authValidation");
 
 routes.post(
   "/book-service",
   // userValidator.create,
   // authValidator.create,
+  fileUpload(),
   isAuthorizedUser,
   bookAppointment
 );
@@ -70,6 +78,18 @@ routes.get(
   getAppointmentByDoctorId
 );
 
+routes.get(
+  "/get-all-documents-by-appointmentId/:id",
+
+  getAllDocumentsByAppointmentId
+);
+
+routes.get(
+  "/get-all-documents-by-appointmentId-by-doctor/:id",
+
+  getAllDocumentsByAppointmentIdByDoctor
+);
+
 routes.patch(
   "/cancel-appointment-by-id",
   // userValidator.create,
@@ -92,6 +112,28 @@ routes.patch(
   // authValidator.create,
   isAuthorizedAdmin,
   assignDoctorToAppointment
+);
+
+routes.delete(
+  "/delete-a-document-by-appointmentId/:id",
+  deleteADocumentByAppointmentId
+);
+
+routes.delete(
+  "/delete-a-document-by-appointmentId-by-doctor/:id",
+  deleteADocumentByAppointmentIdByDoctor
+);
+
+routes.post(
+  "/add-document-to-appointment/:id",
+  fileUpload(),
+  addDocumentToAppointment
+);
+
+routes.post(
+  "/add-document-to-appointment-by-doctor/:id",
+  fileUpload(),
+  addDocumentToAppointmentByDoctor
 );
 
 module.exports = routes;

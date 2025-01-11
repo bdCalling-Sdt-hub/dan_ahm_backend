@@ -9,8 +9,24 @@ const HTTP_STATUS = require("../constants/statusCodes");
 // Book an appointment
 const bookAppointment = async (req, res) => {
   try {
-    const { serviceId, dateTime, dayOfWeek, type, description, nhsNumber } =
-      req.body;
+    const {
+      serviceId,
+      dateTime,
+      dayOfWeek,
+      type,
+      description,
+      nhsNumber,
+      name,
+      address,
+      dateOfBirth,
+      currentNHSGPDetails,
+      nameOfDoctor,
+      surgeryAddress,
+      surgeryTelephoneNumber,
+      surgeryEmail,
+    } = req.body;
+
+    console.log("body", req.body);
 
     if (!req.user) {
       return res
@@ -69,6 +85,16 @@ const bookAppointment = async (req, res) => {
         .send(failure("This time slot is already booked"));
     }
 
+    // Handle document uploads
+    const documentPaths = [];
+    if (req.files && req.files["pdfFiles"]) {
+      req.files.pdfFiles.forEach((file) => {
+        documentPaths.push(file.path); // Save file paths
+      });
+    }
+
+    console.log("documentPaths", documentPaths);
+
     // Book the appointment
     const appointment = new Appointment({
       serviceId,
@@ -78,9 +104,21 @@ const bookAppointment = async (req, res) => {
       description: description || "no description provided",
       dayOfWeek,
       type,
+      documents: documentPaths, // Save uploaded document paths
     });
 
     appointment.nhsNumber = nhsNumber || patient.nhsNumber;
+    patient.name = name || patient.name;
+    patient.address = address || patient.address;
+    patient.dateOfBirth = dateOfBirth || patient.dateOfBirth;
+    patient.currentNHSGPDetails =
+      currentNHSGPDetails || patient.currentNHSGPDetails;
+    patient.nameOfDoctor = nameOfDoctor || patient.nameOfDoctor;
+    patient.surgeryAddress = surgeryAddress || patient.surgeryAddress;
+    patient.surgeryTelephoneNumber =
+      surgeryTelephoneNumber || patient.surgeryTelephoneNumber;
+    patient.surgeryEmail = surgeryEmail || patient.surgeryEmail;
+    await patient.save();
 
     // if (appointment) {
     //   // Remove the selected dateTime from the service's available times
@@ -495,7 +533,7 @@ const getAppointmentByDoctorId = async (req, res) => {
         .status(HTTP_STATUS.NOT_FOUND)
         .send(failure("please login first"));
     }
-    const { page, limit } = req.query;
+    const { page, limit, status, search } = req.query;
     if (page < 1 || limit < 0) {
       return res
         .status(HTTP_STATUS.UNPROCESSABLE_ENTITY)
@@ -503,14 +541,23 @@ const getAppointmentByDoctorId = async (req, res) => {
     }
     const pageValue = parseInt(page) || 1;
     const limitValue = parseInt(limit) || 10;
-    const appointments = await Appointment.find({
-      doctorId: req.user._id,
-    })
+    const query = { doctorId: req.user._id };
+    if (status && ["upcoming", "completed", "cancelled"].includes(status)) {
+      query.status = status;
+    }
+    if (search) {
+      query.$or = [
+        { patientEmail: { $regex: search, $options: "i" } },
+        { "patient.name": { $regex: search, $options: "i" } },
+        { "patient.email": { $regex: search, $options: "i" } },
+      ];
+    }
+    const appointments = await Appointment.find(query)
       .sort({ createdAt: -1 }) // fetch in descending order;
       .skip((pageValue - 1) * limitValue)
       .limit(limitValue)
       .populate("doctorId", "-notifications");
-    const total = await Appointment.countDocuments({ doctorId: req.user._id });
+    const total = await Appointment.countDocuments(query);
     if (!appointments) {
       return res
         .status(HTTP_STATUS.NOT_FOUND)
@@ -533,6 +580,226 @@ const getAppointmentByDoctorId = async (req, res) => {
   }
 };
 
+const getAllDocumentsByAppointmentId = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const appointment = await Appointment.findById(req.params.id).populate(
+      "documents"
+    );
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(success("Documents retrieved successfully", appointment.documents));
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to retrieve documents"));
+  }
+};
+const getAllDocumentsByAppointmentIdByDoctor = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    return res
+      .status(HTTP_STATUS.OK)
+      .send(
+        success(
+          "Documents retrieved successfully",
+          appointment.documentsByDoctor
+        )
+      );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to retrieve documents"));
+  }
+};
+
+const deleteADocumentByAppointmentId = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const { documentUrl } = req.body;
+    if (!documentUrl) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide document url"));
+    }
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentIndex = appointment.documents.findIndex(
+      (doc) => doc === documentUrl
+    );
+    if (documentIndex === -1) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Document not found"));
+    }
+    const deletedDocument = appointment.documents.splice(documentIndex, 1)[0];
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document deleted successfully", {
+        deletedDocument,
+        documents: appointment.documents,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to delete document"));
+  }
+};
+const deleteADocumentByAppointmentIdByDoctor = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const { documentUrl } = req.body;
+    if (!documentUrl) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide document url"));
+    }
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentIndex = appointment.documentsByDoctor.findIndex(
+      (doc) => doc === documentUrl
+    );
+    if (documentIndex === -1) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Document not found"));
+    }
+    const deletedDocument = appointment.documentsByDoctor.splice(
+      documentIndex,
+      1
+    )[0];
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document deleted successfully", {
+        deletedDocument,
+        documentsByDoctor: appointment.documentsByDoctor,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to delete document"));
+  }
+};
+
+const addDocumentToAppointment = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentPaths = [];
+    if (req.files && req.files["pdfFiles"]) {
+      req.files.pdfFiles.forEach((file) => {
+        documentPaths.push(file.path); // Save file paths
+      });
+    }
+    console.log("documentPaths", documentPaths);
+    appointment.documents.push(...documentPaths);
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document added successfully", {
+        documents: appointment.documents,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to add document"));
+  }
+};
+
+const addDocumentToAppointmentByDoctor = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentPaths = [];
+    if (req.files && req.files["pdfFiles"]) {
+      req.files.pdfFiles.forEach((file) => {
+        documentPaths.push(file.path); // Save file paths
+      });
+    }
+    console.log("documentPaths", documentPaths);
+    appointment.documentsByDoctor.push(...documentPaths);
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document added successfully", {
+        documentsByDoctor: appointment.documentsByDoctor,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to add document"));
+  }
+};
+
 module.exports = {
   bookAppointment,
   cancelAppointment,
@@ -544,4 +811,10 @@ module.exports = {
   getAppointmentById,
   getAppointmentByPatientId,
   getAppointmentByDoctorId,
+  getAllDocumentsByAppointmentId,
+  deleteADocumentByAppointmentId,
+  addDocumentToAppointment,
+  addDocumentToAppointmentByDoctor,
+  deleteADocumentByAppointmentIdByDoctor,
+  getAllDocumentsByAppointmentIdByDoctor,
 };

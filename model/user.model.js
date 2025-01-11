@@ -21,6 +21,30 @@ const userSchema = new mongoose.Schema(
       minlength: 5,
       select: false,
     },
+    address: {
+      type: String,
+      required: false,
+    },
+    currentNHSGPDetails: {
+      type: String,
+      required: false,
+    },
+    nameOfDoctor: {
+      type: String,
+      required: false,
+    },
+    surgeryAddress: {
+      type: String,
+      required: false,
+    },
+    surgeryTelephoneNumber: {
+      type: String,
+      required: false,
+    },
+    surgeryEmail: {
+      type: String,
+      required: false,
+    },
     role: {
       type: String,
       enum: ["doctor", "patient", "admin"],
@@ -50,7 +74,10 @@ const userSchema = new mongoose.Schema(
     },
     nhsNumber: {
       type: String,
-      required: false,
+      // unique: true,
+    },
+    uniqueId: {
+      type: String,
       // unique: true,
     },
     consultationHistory: [
