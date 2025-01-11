@@ -679,6 +679,52 @@ const deleteADocumentByAppointmentId = async (req, res) => {
       .send(failure("Failed to delete document"));
   }
 };
+const deleteADocumentByAppointmentIdByDoctor = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide appointment id"));
+    }
+    const { documentUrl } = req.body;
+    if (!documentUrl) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Please provide document url"));
+    }
+    const appointment = await Appointment.findById(req.params.id);
+
+    if (!appointment) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Appointment not found"));
+    }
+    const documentIndex = appointment.documentsByDoctor.findIndex(
+      (doc) => doc === documentUrl
+    );
+    if (documentIndex === -1) {
+      return res
+        .status(HTTP_STATUS.NOT_FOUND)
+        .send(failure("Document not found"));
+    }
+    const deletedDocument = appointment.documentsByDoctor.splice(
+      documentIndex,
+      1
+    )[0];
+    await appointment.save();
+    return res.status(HTTP_STATUS.OK).send(
+      success("Document deleted successfully", {
+        deletedDocument,
+        documentsByDoctor: appointment.documentsByDoctor,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(HTTP_STATUS.INTERNAL_SERVER_ERROR)
+      .send(failure("Failed to delete document"));
+  }
+};
 
 const addDocumentToAppointment = async (req, res) => {
   try {
@@ -769,5 +815,6 @@ module.exports = {
   deleteADocumentByAppointmentId,
   addDocumentToAppointment,
   addDocumentToAppointmentByDoctor,
+  deleteADocumentByAppointmentIdByDoctor,
   getAllDocumentsByAppointmentIdByDoctor,
 };
